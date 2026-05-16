@@ -23,42 +23,41 @@
 2. 新規リポジトリ名: `{project}-context` を推奨（例: `acme-onboarding-context`）
 3. ローカルに `git clone`
 
-### 2. 初期セットアップ（手動・5 分）
+### 2. 初期セットアップ（AI に任せる）
 
-すべて手動。スクリプトは同梱していない。
+clone したディレクトリで **Claude Code（または好みの AI コーディングエージェント）を起動** し、こう伝えるだけ:
 
-#### a. プロジェクト情報の埋め込み
+> 「セットアップしたい」
 
-`AGENTS.md` を開き、以下のプレースホルダを実値に置換:
+AI は `AGENTS.md` の「プロジェクト初期セットアップフロー」セクションに従って:
 
-| プレースホルダ | 内容 |
-|----------------|------|
-| `{{PROJECT_NAME}}` | プロジェクト名（例: Acme Onboarding） |
-| `{{PROJECT_SUMMARY}}` | プロジェクトの 1〜3 行概要 |
-| `{{STAKEHOLDERS}}` | 主要関係者（箇条書きでロール付き） |
+1. プロジェクト名・概要・ステークホルダー・初期トピックを対話的にヒアリング
+2. `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` のプレースホルダを置換
+3. 初期トピックハブを作成（指定があれば）
+4. `scripts/` の lint を実行して整合性を確認
+5. セットアップ用セクションの削除を提案
+6. 初回コミット + push を提案
 
-#### b. プロジェクト概要ファイルの初期化
+`AGENTS.md` を読み込めるエージェントなら自動的にこのフローを実行できます（Claude Code / Cursor / Aider / Codex 等）。
 
-`docs/wiki/index.md` を開き、`{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}` を置換。`{{TODAY}}` は当日の `YYYY-MM-DD` に置き換える。
+#### 手動セットアップ（AI を使わない場合）
 
-「主要トピック」欄は空のまま開始してよい（運用しながら `docs/wiki/topics/` を増やす）。
-
-#### c. CI 用 npm パッケージのインストール（任意・ローカル lint したい場合のみ）
+`{{` で始まるプレースホルダを grep で検出し、各値を置換するだけ:
 
 ```bash
-cd scripts && npm install
+grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
 ```
 
-CI 上では Actions が自動で `npm ci` するので、ローカル lint を回したい場合のみ実行。
+詳細は `AGENTS.md` の「プロジェクト初期セットアップフロー > 手動セットアップ」を参照。
 
-#### d. リポジトリ Settings
+### 3. リポジトリ Settings（任意）
 
-- 必要に応じて Branch protection を main に設定し、`lint` Actions の green を必須に
-- このテンプレ自体を再びテンプレ化したい場合のみ、Settings → Template repository を有効化
+- Branch protection を main に設定し、`lint` Actions の green を必須化
+- このテンプレ自体を再びテンプレ化したい場合のみ Settings → Template repository を有効化
 
-### 3. 運用開始
+### 4. 運用開始
 
-`AGENTS.md` を開きながら Claude Code（または好みの AI コーディングエージェント）を起動すれば、規約に沿ったファイル生成が可能。
+最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めるのがおすすめ。普段の運用は `AGENTS.md` の「推奨ワークフロー」を参照。
 
 ---
 

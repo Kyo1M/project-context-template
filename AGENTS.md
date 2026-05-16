@@ -6,6 +6,102 @@
 
 ---
 
+## プロジェクト初期セットアップフロー
+
+> このセクションは、テンプレからリポジトリが生成された直後の **初回セットアップ専用** です。セットアップ完了後はセクションごと削除してください（手順 6 で AI が提案します）。
+
+### AI への起動条件
+
+AI（Claude Code 等）は、以下のいずれかに該当する場合、ユーザーへ「初期セットアップを実施しましょうか？」と自発的に確認してください:
+
+- `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` の中に `{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}` `{{TODAY}}` 等のプレースホルダが残っている
+- ユーザーが「セットアップしたい」「初期セットアップ」「setup」「初期化」等と発話
+
+### セットアップ手順（AI が実行）
+
+**1. ユーザーから以下を収集する**（まとめて or 順番に）:
+
+| 項目 | 用途 |
+|------|------|
+| プロジェクト名 | `{{PROJECT_NAME}}` の置換値 |
+| プロジェクト概要（1〜3 行） | `{{PROJECT_SUMMARY}}` の置換値 |
+| 主要ステークホルダー | `{{STAKEHOLDERS}}` の置換値（ロール + 名前で箇条書き化） |
+| 初期トピック（任意） | `docs/wiki/topics/<slug>.md` の作成対象 |
+
+**2. プレースホルダを置換する。** 対象ファイル:
+
+- `AGENTS.md`（`{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}`）
+- `README.md`（タイトル等で参照していれば）
+- `docs/wiki/index.md`（`{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}` `{{TODAY}}`）
+- `llms.txt`（`{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}`）
+
+`{{TODAY}}` は当日の `YYYY-MM-DD`。
+
+**3. 初期トピックハブを作成（任意）。** 手順 1 で初期トピックが指定された場合のみ:
+
+各 topic ごとに `docs/wiki/topics/<slug>.md` を作成。frontmatter:
+
+```yaml
+---
+type: topic
+slug: <slug>
+title: <日本語タイトル>
+summary: <1行サマリー>
+date: <today>
+status: active
+topics: [<slug>]
+tags: []
+---
+```
+
+本文は以下の空テンプレ:
+
+```markdown
+# <日本語タイトル>
+
+## 関連議事録
+（後続の議事録 frontmatter で `topics: [<slug>]` を設定すると、このハブに追加されます）
+
+## 決定事項
+## 関連メモ
+## クライアント説明資料
+## 壁打ち / 探索
+## オープンな未解決論点
+```
+
+**4. lint を実行して frontmatter が全て正常か確認する:**
+
+```bash
+npm install --prefix scripts   # 初回のみ
+npm run lint --prefix scripts
+```
+
+エラーが出たら修正してから次へ。
+
+**5. このセクション（`## プロジェクト初期セットアップフロー`）を `AGENTS.md` から削除する旨をユーザーに提案する。** 同意を得たら削除。
+
+**6. 初回コミットを提案する:**
+
+```bash
+git add -A
+git commit -m "Initialize project context for <PROJECT_NAME>"
+git push
+```
+
+**7. ユーザーに案内する:**
+
+> セットアップ完了です。最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めると良いです。普段の運用は AGENTS.md の「推奨ワークフロー」を参照してください。
+
+### 手動セットアップ（AI を使わない場合）
+
+上記 1〜2 を手作業で行う。対象プレースホルダは grep で検出可能:
+
+```bash
+grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
+```
+
+---
+
 ## プロジェクト概要
 
 > **{{PROJECT_NAME}}**
