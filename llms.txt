@@ -1,0 +1,35 @@
+# {{PROJECT_NAME}} Context
+
+> {{PROJECT_SUMMARY}}
+
+このファイルは [llms.txt 規約](https://llmstxt.org/) に基づく LLM 向け全体索引です。
+新しいファイルを追加した時、または定期的に、AGENTS.md の「llms.txt 更新」フローに従って再生成してください。
+
+## 運用契約
+
+- [AGENTS.md](./AGENTS.md): このリポジトリの LLM 運用契約。ディレクトリ構造、命名規約、frontmatter スキーマ、推奨ワークフローを定義
+- [README.md](./README.md): 人間向けの利用ガイド
+
+## Wiki
+
+- [docs/wiki/index.md](./docs/wiki/index.md): プロジェクト概要・歩き方
+
+## Topics
+
+<!-- ここに wiki/topics/<slug>.md を追加していく -->
+
+## Decisions
+
+<!-- ここに decisions/yyyymmdd_*.md を追加していく -->
+
+## Recent Minutes
+
+<!-- ここに最近の minutes/yyyymmdd_*.md を追加していく -->
+
+## Deliverables
+
+<!-- ここに deliverables/yyyymmdd_*.html を追加していく -->
+
+## Open Tasks
+
+<!-- ここに status: todo / in_progress な tasks/yyyymmdd_*.md を追加していく -->
