@@ -226,6 +226,70 @@ format: slide
 
 ---
 
+## Git 運用ルール
+
+このリポジトリでファイルを作成・編集する際、AI（Claude Code 等）は必ず本ルールに従ってください。
+
+### 基本原則
+
+- **`main` で直接作業しない**。`main` は常に他ブランチからのマージ先として保つ
+- **1 作業 = 1 ブランチ**（議事録作成、決定事項記録、wiki 更新、AGENTS 修正など、まとまった単位ごと）
+- **コミットメッセージは案を提示してユーザー確認後に commit**
+- **適宜 push**（最初の commit 時に `-u` 付き、以降は区切りで）
+- **マージ / PR は明示的に依頼があるまで実行しない**
+
+### ブランチ命名規約
+
+```
+<type>/<yyyymmdd>-<short-slug>
+```
+
+- `<type>` は frontmatter の `type` に揃える。`chore` は AGENTS.md / README.md / scripts 等の運用ファイル更新用。
+  - `minutes` / `decision` / `memo` / `wiki` / `task` / `deliverable` / `exploration` / `chore`
+- `<yyyymmdd>` は作業開始日
+- `<short-slug>` は ASCII kebab-case（ファイル命名規約と同じ）
+
+例:
+- `minutes/20260517-onboarding-kickoff`
+- `decision/20260520-tech-stack`
+- `wiki/20260601-topic-onboarding-hub`
+- `chore/20260517-update-agents`
+
+### 作業フロー（AI が毎回実行）
+
+1. **ブランチ状態確認**
+   ```bash
+   git rev-parse --abbrev-ref HEAD
+   ```
+2. **`main` 上の場合** — `main` の更新を取り込んでから新ブランチへ:
+   ```bash
+   git pull --ff-only
+   git checkout -b <type>/<yyyymmdd>-<slug>
+   ```
+3. **作業実施** — ファイル作成 / 編集
+4. **lint 実行**（コンテンツファイルを変更した場合）:
+   ```bash
+   npm run lint --prefix scripts
+   ```
+5. **`git status` / `git diff --cached` を確認した上で、コミットメッセージ案をユーザーに提示**
+   - 例: 「以下のメッセージで commit します。よろしいですか？\n\n`[minutes] Add onboarding kickoff (2026-05-17)`」
+6. **ユーザー確認後に commit**
+7. **push 提案** — 初回 commit は `git push -u origin <branch>`、以降の commit は区切りごとに `git push` を提案
+8. **作業区切りでマージ / PR の希望を確認** — 「`main` に直接マージしますか？ それとも PR を作りますか？」を尋ね、依頼があるまで実行しない
+
+### コミットメッセージ規約
+
+- 1 行目（subject）: 60〜72 字以内の要約。日本語 / 英語どちらでも可。種別プレフィックス推奨（`[minutes]` / `[decision]` / `[wiki]` / `[chore]` 等）
+- 2 行目: 空行
+- 3 行目以降（body, 任意）: 変更理由・派生関係（`Derived-from: docs/minutes/...`）・補足
+
+### 例外
+
+- **初期セットアップ**（`プロジェクト初期セットアップフロー` セクション）はテンプレ生成直後の 1 回限りなので `main` 上で実行してよい。完了後は本ルールを厳守
+- **軽微な typo / 1 行修正** で、ユーザーが「`main` で直接修正して」と明示した場合のみ `main` 直接編集可
+
+---
+
 ## 推奨ワークフロー
 
 ### 1. 議事録作成フロー
