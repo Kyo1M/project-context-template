@@ -487,7 +487,7 @@ format: slide
 | skill | 参照 | トリガー例 | 用途 |
 |-------|------|-----------|------|
 | `meeting-minutes` | [Kyo1M/skills](https://github.com/Kyo1M/skills/blob/main/meeting-minutes/SKILL.md) | 「議事録化して」「メモを整えて」 | `_drafts/` → `minutes/` + `decisions/` / `tasks/` への派生抽出 |
-| `slides-html` | TODO: 別途追加予定 | 「スライド作って」「説明資料を」 | `docs/deliverables/` への HTML スライド/レポート生成 |
+| `html-slide-deck` | [Kyo1M/skills](https://github.com/Kyo1M/skills/blob/main/html-slide-deck/SKILL.md) | 「スライド作って」「説明資料を」「議論用資料」 | `docs/deliverables/` への HTML スライド生成（continova v1 デザインシステム同梱、自社デザインへカスタマイズ可） |
 | `superpowers:brainstorming` | [obra/superpowers](https://github.com/obra/superpowers) | 「壁打ちしたい」「方針を考えたい」 | AI との発散的探索 |
 | `grill-me` | [mattpocock/skills](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md) | 「設計を詰めたい」「決定する前に詰めて」 | 設計判断の徹底議論 |
 | `superpowers:writing-plans` | [obra/superpowers](https://github.com/obra/superpowers) | 「実装プランを書いて」 | 大きな施策の計画書 |
