@@ -484,14 +484,16 @@ format: slide
 
 このリポジトリの運用で活用が推奨される skill とトリガーです。実体は基本的にユーザーグローバル（`~/.claude/skills/`）に存在することを前提とします。
 
-| skill | トリガー例 | 用途 |
-|-------|-----------|------|
-| 議事録作成（既存） | 「議事録化して」「メモを整えて」 | 議事メモ → 正式議事録 + 派生抽出 |
-| HTML スライド作成（既存） | 「スライド作って」「説明資料を」 | `docs/deliverables/` への HTML 生成 |
-| `superpowers:brainstorming` | 「壁打ちしたい」「方針を考えたい」 | AI との発散的探索 |
-| `grill-me` | 「設計を詰めたい」「決定する前に詰めて」 | 設計判断の徹底議論 |
-| `superpowers:writing-plans` | 「実装プランを書いて」 | 大きな施策の計画書 |
-| `superpowers:subagent-driven-development` | 「並列で進めて」 | 独立した複数タスクの並行実行 |
+| skill | 参照 | トリガー例 | 用途 |
+|-------|------|-----------|------|
+| `meeting-minutes` | [Kyo1M/skills](https://github.com/Kyo1M/skills/blob/main/meeting-minutes/SKILL.md) | 「議事録化して」「メモを整えて」 | `_drafts/` → `minutes/` + `decisions/` / `tasks/` への派生抽出 |
+| `slides-html` | TODO: 別途追加予定 | 「スライド作って」「説明資料を」 | `docs/deliverables/` への HTML スライド/レポート生成 |
+| `superpowers:brainstorming` | [obra/superpowers](https://github.com/obra/superpowers) | 「壁打ちしたい」「方針を考えたい」 | AI との発散的探索 |
+| `grill-me` | [mattpocock/skills](https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md) | 「設計を詰めたい」「決定する前に詰めて」 | 設計判断の徹底議論 |
+| `superpowers:writing-plans` | [obra/superpowers](https://github.com/obra/superpowers) | 「実装プランを書いて」 | 大きな施策の計画書 |
+| `superpowers:subagent-driven-development` | [obra/superpowers](https://github.com/obra/superpowers) | 「並列で進めて」 | 独立した複数タスクの並行実行 |
+
+各 skill の実体は `~/.claude/skills/<name>/` に配置されている前提です。`meeting-minutes` は [Kyo1M/skills](https://github.com/Kyo1M/skills) をクローン or 参照して symlink で配置してください。
 
 `record-decision` / `retrospect-topic` などはこの AGENTS.md の prose 指示で運用します。差分が育ってきた段階で skill 化を検討します。
 

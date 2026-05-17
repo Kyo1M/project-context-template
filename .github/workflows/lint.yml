@@ -29,5 +29,5 @@ jobs:
       - name: Lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --exclude-mail --offline './**/*.md' './**/*.html'
+          args: --no-progress --offline './**/*.md' './**/*.html'
           fail: true
