@@ -158,7 +158,7 @@ llms.txt            LLM 向け全体索引（要約 + リンク集）
 | 複数案比較・インタラクティブ探索・壁打ち出力 | `docs/explorations/` |
 | 会議で出たアクション、会議外で出たタスク | `tasks/index.md`（台帳）。議事録作成時は AI が追記、会議外は人が 1 行足す |
 | 台帳の 1 行に収まらない要件・仕様 | `tasks/yyyymmdd_<slug>.md`（AI と壁打ちして作る。ワークフロー 3） |
-| 設計書・実装計画（`brainstorming`・`writing-plans` skill の出力） | `docs/superpowers/`（lint 対象外） |
+| 設計書・実装計画（`brainstorming`・`writing-plans` skill の出力） | `docs/superpowers/`（lint 対象外）。設計書に基づいて実装し、完了したら削除する（経緯は git 履歴と PR に残る） |
 
 ---
 
@@ -507,7 +507,7 @@ format: slide
 |-------|-----------|------|
 | `meeting-minutes` | 「議事録化して」「メモを整えて」 | `_drafts/` → 議事録 + 台帳追記 + 決定案 + `llms.txt` + wiki 差分（ワークフロー 1） |
 | `grill-me` | 「壁打ちしたい」「論点を整理したい」「プランを精査して」 | 前提を疑う批判的壁打ち。論点整理 md を残す（ワークフロー 5） |
-| `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5） |
+| `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5。実装が完了したら削除） |
 | `writing-plans` | 「実装プランを書いて」 | 設計書から実装計画を作る |
 | `deck-outline` → `html-slide-deck` → `deck-critique` | 「スライド作って」「説明資料を」「資料をレビューして」 | 構成 md → `.dc.html` → 批評（ワークフロー 6） |
 
