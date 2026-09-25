@@ -3,16 +3,17 @@
 > {{PROJECT_SUMMARY}}
 
 このファイルは [llms.txt 規約](https://llmstxt.org/) に基づく LLM 向け全体索引です。
-新しいファイルを追加した時、または定期的に、AGENTS.md の「llms.txt 更新」フローに従って再生成してください。
+「Recent Minutes」は直近 5 件程度、「Decisions」は全件（間引かない）、「Open Tasks」はタスク台帳へのリンク 1 行だけを置きます。議事録作成時に `meeting-minutes` skill が追記し、ファイルを手で足したときも同じ規則で追記します。
 
 ## 運用契約
 
-- [AGENTS.md](./AGENTS.md): このリポジトリの LLM 運用契約。ディレクトリ構造、命名規約、frontmatter スキーマ、推奨ワークフローを定義
+- [AGENTS.md](./AGENTS.md): このリポジトリの LLM 運用契約。ディレクトリ構造、命名規約、frontmatter スキーマ、Git 運用、推奨ワークフローを定義
+- [docs/guide/project-ops-guide.md](./docs/guide/project-ops-guide.md): 運用ガイド。議事録・ネクストアクション表・タスク台帳・タスクファイル・決定ファイル・wiki 差分の型の正本と、タスクの持ち方
 - [README.md](./README.md): 人間向けの利用ガイド
 
 ## Wiki
 
-- [docs/wiki/index.md](./docs/wiki/index.md): プロジェクト概要・歩き方
+- [docs/wiki/index.md](./docs/wiki/index.md): プロジェクトの「いま」（目的・前提・進行・主な決定・未解決論点・直近更新）と歩き方
 
 ## Topics
 
@@ -20,11 +21,11 @@
 
 ## Decisions
 
-<!-- ここに decisions/yyyymmdd_*.md を追加していく -->
+<!-- 全件。形式: - [docs/decisions/yyyymmdd_<slug>.md](./docs/decisions/yyyymmdd_<slug>.md): <決定の要旨> -->
 
 ## Recent Minutes
 
-<!-- ここに最近の minutes/yyyymmdd_*.md を追加していく -->
+<!-- 直近 5 件程度。形式: - [docs/minutes/yyyymmdd_<slug>.md](./docs/minutes/yyyymmdd_<slug>.md): <会議名と要点> -->
 
 ## Deliverables
 
@@ -32,4 +33,4 @@
 
 ## Open Tasks
 
-<!-- ここに status: todo / in_progress な tasks/yyyymmdd_*.md を追加していく -->
+- [tasks/index.md](./tasks/index.md): タスク台帳（進行中のタスクの一覧と状態。個別の要件は `tasks/yyyymmdd_<slug>.md`）

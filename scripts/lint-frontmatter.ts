@@ -39,6 +39,9 @@ const EXEMPT_FILES = new Set([
   "docs/wiki/index.md",
 ]);
 
+// ファイル名規則（yyyymmdd_<slug>）を適用しないディレクトリ。frontmatter は検証する
+const FILENAME_EXEMPT_DIRS = ["docs/guide/"];
+
 type Issue = { file: string; message: string };
 
 const issues: Issue[] = [];
@@ -82,7 +85,8 @@ function validateFrontmatter(file: string, fm: Record<string, unknown>) {
   }
 
   if (fm.date !== undefined && !isPlaceholderDate(fm.date)) {
-    const dateStr = String(fm.date);
+    // YAML が引用符なしの日付を Date に解釈した場合は YYYY-MM-DD に戻す
+    const dateStr = fm.date instanceof Date ? fm.date.toISOString().slice(0, 10) : String(fm.date);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
       record(file, `date must be YYYY-MM-DD format: got ${dateStr}`);
     }
@@ -98,6 +102,7 @@ function validateFrontmatter(file: string, fm: Record<string, unknown>) {
 function validateFilename(file: string) {
   const basename = path.basename(file);
   if (basename === "index.md" || basename === ".gitkeep") return;
+  if (FILENAME_EXEMPT_DIRS.some((dir) => file.startsWith(dir))) return;
   if (!FILENAME_RE.test(basename)) {
     record(file, `filename must match yyyymmdd_<kebab-slug>.{md,html}: got ${basename}`);
   }
@@ -139,7 +144,9 @@ async function main() {
   const files = await fg(patterns, {
     cwd: repoRoot,
     absolute: true,
-    ignore: ["**/.gitkeep"],
+    // docs/superpowers/ は brainstorming / writing-plans skill の設計書・実装計画の置き場、
+    // docs/minutes/_drafts/ は会議中の走り書き（frontmatter 任意）。いずれも lint の対象外
+    ignore: ["**/.gitkeep", "docs/superpowers/**", "docs/minutes/_drafts/**"],
   });
 
   if (files.length === 0) {
