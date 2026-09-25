@@ -4,7 +4,7 @@
 
 人間は通常の Markdown を直接書きます。LLM はこの AGENTS.md と `llms.txt`、`docs/wiki/index.md`、`docs/wiki/topics/` のトピックハブから全体を一括把握できるよう、二層構造で運用します。
 
-このファイルは契約と要点だけを持ちます。議事録・ネクストアクション表・タスク台帳・決定ファイル・wiki 差分の **型の正本は `docs/guide/project-ops-guide.md`** です。skill はそのガイドの型に従って動きます。
+このファイルは契約と要点だけを持ちます。議事録・ネクストアクション表・タスク台帳・タスクファイル・決定ファイル・wiki 差分の **型の正本は `docs/guide/project-ops-guide.md`** です。`meeting-minutes` skill はそのガイドの型に従って動きます。タスクの一覧と状態はこのリポジトリの台帳で持ち、GitHub Issue などの外部のタスク管理ツールとは連携しません。
 
 ---
 
@@ -31,7 +31,6 @@ AI（Claude Code 等）は、以下のいずれかに該当する場合、ユー
 | 前提（対象範囲・対象外・重要な制約） | `docs/wiki/index.md`「前提」 |
 | 進行（現状・課題・体制・スケジュール） | `docs/wiki/index.md`「進行」表 |
 | 定例（曜日・参加者）、議事録を作る人 | `docs/wiki/index.md`「進行」表 |
-| タスクのツール（なし（表のみ）／GitHub Issue／外部ボード） | `docs/wiki/index.md`「進行」表。GitHub Issue ならリポジトリと Project の URL、メンバーの `名前: GitHub ID` も聞く |
 | 初期トピック（任意） | `docs/wiki/topics/<slug>.md` の作成対象 |
 
 聞き取れなかった項目は空欄のまま残し、「未解決論点」に「〜を聞く」を 1 行置く（「要確認」の空行を作らない）。
@@ -141,7 +140,7 @@ docs/
 └── explorations/   AI 壁打ち成果物・複数案比較・プロトタイプ（HTML 主軸）
 tasks/
 ├── index.md        タスク台帳（タスクの一覧と状態の正本）
-└── yyyymmdd_<slug>.md  分量のある要件・仕様（1 タスク 1 ファイル。Issue や下書きの本文に収まらないものだけ）
+└── yyyymmdd_<slug>.md  分量のある要件・仕様（1 タスク 1 ファイル。台帳の 1 行に収まらないものだけ）
 llms.txt            LLM 向け全体索引（要約 + リンク集）
 ```
 
@@ -158,8 +157,7 @@ llms.txt            LLM 向け全体索引（要約 + リンク集）
 | クライアントに見せる資料・スライド・レポート | `docs/deliverables/` |
 | 複数案比較・インタラクティブ探索・壁打ち出力 | `docs/explorations/` |
 | 会議で出たアクション、会議外で出たタスク | `tasks/index.md`（台帳）。議事録作成時は AI が追記、会議外は人が 1 行足す |
-| Issue や下書きの本文に収まらない要件・仕様 | `tasks/yyyymmdd_<slug>.md`（`task-breakdown` skill） |
-| タスクの進捗を追うツール | `docs/wiki/index.md`「進行」表の「タスクのツール」行で選ぶ（なし（表のみ）／GitHub Issue／外部ボード） |
+| 台帳の 1 行に収まらない要件・仕様 | `tasks/yyyymmdd_<slug>.md`（AI と壁打ちして作る。ワークフロー 3） |
 | 設計書・実装計画（`brainstorming`・`writing-plans` skill の出力） | `docs/superpowers/`（lint 対象外） |
 
 ---
@@ -172,7 +170,7 @@ llms.txt            LLM 向け全体索引（要約 + リンク集）
 yyyymmdd_<kebab-case-slug>.{md,html}
 ```
 
-- 日付プレフィックス: `yyyymmdd`（区切り無し 8 桁）。議事録・決定は会議日、タスクファイルは作成日（Issue 番号はファイル名に使わない）
+- 日付プレフィックス: `yyyymmdd`（区切り無し 8 桁）。議事録・決定は会議日、タスクファイルは作成日
 - セパレータ: `_`（日付とスラグの境界）
 - スラグ: ASCII 英小文字 + 数字 + `-`（kebab-case）
 - 日本語タイトルは frontmatter `title:` に記載する（ファイル名には入れない）
@@ -205,7 +203,7 @@ related: []          # 横の関連ファイル
 ---
 ```
 
-`status` の使い分け: `minutes` は `draft` 始まり、`decision`・`wiki`・`task` は `active` 始まり。`superseded` は後の決定で置き換えた `decision`（古いファイルは消さない）と、置き換わった資料・タスク。`done` は対にした Issue が閉じた `task`（`meeting-minutes` skill が提案し、承認後に直す）と完了した `task`。
+`status` の使い分け: `minutes` は `draft` 始まり、`decision`・`wiki`・`task` は `active` 始まり。`superseded` は後の決定で置き換えた `decision`（古いファイルは消さない）と、置き換わった資料・タスク。`done` は台帳で完了にしたタスクのファイル（`meeting-minutes` skill が提案し、承認後に直す）。`cancelled` は見送ったタスクのファイル。
 
 ### HTML への埋め込み
 
@@ -234,14 +232,14 @@ format: slide
 |------|----------|----------|
 | `minutes` | `attendees: []`, `meeting_type: kickoff/review/sync/...` | `recording: path`, `transcript: path` |
 | `decision` | — | `drivers: []`, `alternatives_considered: []`, `supersedes: []` |
-| `task` | — | `issue: <対にする Issue やカードの URL>`, `assignee:`, `due:`, `priority: high/mid/low`, `parent_topic:`（担当・期限・状態の正本は `tasks/index.md`。ファイル側には書かなくてよい） |
+| `task` | — | `assignee:`, `due:`, `priority: high/mid/low`, `parent_topic:`（担当・期限・状態の正本は `tasks/index.md`。ファイル側には書かなくてよい） |
 | `memo` | — | `mood: explore/reflect/...` |
 | `wiki` | `summary:` | `visual: path-to-html` |
 | `topic` | `slug:`, `summary:` | `owner:` |
 | `deliverable` | `audience: client/internal/...`, `format: slide/report/dashboard` | `source_prompt: path-or-inline` |
 | `exploration` | `prompt: ...`, `outcome: open/promoted/discarded` | `promoted_to: path-to-decision` |
 
-`tasks/index.md`（台帳）も `type: task` です。決定事項（ADR）本文は H2 で `## Context` `## Decision` `## Consequences` `## Alternatives Considered`（型は運用ガイド 4-6）。
+`tasks/index.md`（台帳）も `type: task` です。決定事項（ADR）本文は H2 で `## Context` `## Decision` `## Consequences` `## Alternatives Considered`（型は運用ガイド 4-4。別案がメモに無ければ `## Alternatives Considered` は省く）。
 
 ---
 
@@ -253,11 +251,10 @@ format: slide
 
 - **`main` で直接作業しない**。`main` は常に他ブランチからのマージ先として保つ
 - **1 作業 = 1 ブランチ**（議事録作成、決定事項記録、wiki 更新、AGENTS 修正など、まとまった単位ごと）
-- **コミットの区切りは skill 1 回の成果物**（`meeting-minutes` なら議事録・台帳・決定・`llms.txt`・wiki をまとめて 1 コミット）。同じセッションで `task-breakdown`・`task-issue` skill まで続けるとき、まだ push していなければタスクファイルと台帳の書き戻しを同じブランチ・同じ PR に含めてよい
+- **コミットの区切りは skill 1 回の成果物**（`meeting-minutes` なら議事録・台帳・決定・`llms.txt`・wiki をまとめて 1 コミット）。同じセッションで続けてタスクファイルを作るとき、まだ push していなければ同じブランチ・同じ PR に含めてよい
 - **コミットメッセージは案を提示してユーザー確認後に commit**
 - **適宜 push**（最初の commit 時に `-u` 付き、以降は区切りで）
 - **マージ / PR は明示的に依頼があるまで実行しない**。議事録・台帳・決定・wiki の確定は PR の差分確認とマージで行う（セルフマージ可）
-- **Issue・Project 側は AI が読むだけで書き換えない**（close・コメント・本文・フィールド・親子）。起票だけは `task-issue` skill が登録計画の承認後に行う
 
 ### ブランチ命名規約
 
@@ -324,15 +321,14 @@ format: slide
 
 | 出るもの | 反映 |
 |---|---|
-| 議事録 `docs/minutes/yyyymmdd_<topic>.md`（概要・前回からの進捗・決定事項・確認事項・ネクストアクション 5 列表・議事内容・メモ・タスク登録の下書き。`derived_from: [元のメモパス]`） | 自動。保存前に「保存前の確認」（未定の担当・期限／親の提案／登録先を空欄にする行／タスクファイルの `status: done`）を 1 回だけ聞く |
-| タスク台帳 `tasks/index.md` への追記（表の全行。ID `yyyymmdd-#`、状態 `未登録`／`表のみ`）と、GitHub Issue の状態の写し | 自動 |
+| 議事録 `docs/minutes/yyyymmdd_<topic>.md`（概要・決定事項・確認事項・ネクストアクション表・議事内容・メモ。`derived_from: [元のメモパス]`） | 自動。保存前に「保存前の確認」（未定の担当・期限／親の提案／台帳の状態の変更／タスクファイルの `status: done`）を 1 回だけ聞く |
+| タスク台帳 `tasks/index.md` への追記（表の全行。ID `T-<n>`、状態 `未着手`）と、会議で報告された着手・完了の反映 | 追記は自動、状態の変更は保存前の確認で承認 |
 | 決定ファイルの案（前提・定義・対象範囲・体制を変える重い決定だけ。理由付き） | 承認してから保存 |
 | `llms.txt` の追記（Recent Minutes・Decisions） | 自動 |
 | `docs/wiki/index.md` の差分案（直近更新・進行・主な決定・未解決論点・用語） | 承認してから反映 |
 
 **派生の判断:**
-- タスクは台帳の行として残す（1 件 1 ファイルにしない）。分量のある要件・仕様が要るときだけ `task-breakdown` skill で `tasks/yyyymmdd_<slug>.md` を作る。
-- 起票は `meeting-minutes` skill では行わない。GitHub Issue を使う案件は、コミットのあとに `task-issue` skill で「タスク登録の下書き」から起票する。
+- タスクは台帳の行として残す（1 件 1 ファイルにしない）。分量のある要件・仕様が要るときだけ `tasks/yyyymmdd_<slug>.md` を作る（ワークフロー 3）。
 - 議事録・台帳・決定・`llms.txt`・wiki をまとめて 1 コミットにし、PR で確定する。
 
 ### 2. 決定事項記録（record-decision 相当）
@@ -340,23 +336,29 @@ format: slide
 ユーザーが「これを決定として記録」「ADR にして」と依頼した場合、または議事録作成で重い決定と判定された場合:
 
 1. `llms.txt` の「Decisions」（全件）と突き合わせ、同じ決定が既にあれば新規ファイルにせず「既存の決定ファイル `<パス>` の再確認」と伝える。内容が変わる決定なら、既存ファイルを `status: superseded` にして新しいファイルを作る
-2. ファイル `docs/decisions/yyyymmdd_<slug>.md` を作成（型は運用ガイド 4-6。本文は `## Context` `## Decision` `## Consequences` `## Alternatives Considered`、`derived_from` に元議事録）
+2. ファイル `docs/decisions/yyyymmdd_<slug>.md` を作成（型は運用ガイド 4-4。本文は `## Context` `## Decision` `## Consequences` `## Alternatives Considered`、`derived_from` に元議事録）
 3. `docs/wiki/index.md`「主な決定」表に 1 行（日付・決定・効く先・出典）を差分案として出し、承認後に追記
 4. `llms.txt` の「Decisions」に 1 行追記
 5. 関連トピックハブ（`docs/wiki/topics/<slug>.md`）に追記する（後述「トピックハブ更新」）
 
-### 3. タスク管理（台帳・整理・起票）
+### 3. タスク管理（台帳・タスクファイル）
 
-タスクの一覧と状態は `tasks/index.md`（台帳）が持ち、議事録のネクストアクション表は会議当日の記録として以後書き換えない。ツールごとの動線と型は運用ガイド 3 節・4 節。
+タスクの一覧と状態は `tasks/index.md`（台帳）が持ち、議事録のネクストアクション表は会議当日の記録として以後書き換えない。型は運用ガイド 3 節・4-3・4-7。
 
 | 場面 | やること |
 |---|---|
 | 会議で出たアクション | `meeting-minutes` skill が台帳に追記する（上記 1） |
-| 会議外（チャット・壁打ち）で出たタスク | 人が台帳の進行中節に 1 行足す（ID `yyyymmdd-#`、出典 `チャット`／`壁打ち`＋日付） |
-| 「タスクを整理したい」「#n を詳細化したい」「子タスクに分けたい」 | `task-breakdown` skill。壁打ちで `tasks/yyyymmdd_<slug>.md`（目的・背景・やること・完了条件・判断の観点・制約・未確定事項）を作り、台帳の「詳細」列にリンクする。Issue 番号を入口にしたときは Issue 側との食い違いを表で見せてからファイルを直す |
-| 「起票して」「Issue にして」 | `task-issue` skill。議事録の下書き・`tasks/` のファイル・自由記述を入口に、登録計画（タイトル・担当・親・期限・Project フィールド）を承認後、Issue 作成 → Sub-issue → Project 取り込み → 台帳の書き戻し。gh が無ければ貼れる文面を出す |
-| 着手・完了 | ツールを使う案件はツール側で。ツール無し案件は担当者が台帳の状態を直す |
-| 「いま開いているタスクは？」 | 台帳の進行中節を読む（GitHub Issue の案件では議事録作成時に Issue から写した値） |
+| 会議外（チャット・壁打ち）で出たタスク | 人が台帳の進行中節に 1 行足す（ID は通し番号の次、出典 `チャット`／`壁打ち`＋日付） |
+| 着手・完了・見送り | 担当者が台帳の状態を直す（着手で `進行中`、完了は完了日を書いて完了節へ、見送りはタスク名の末尾に「（見送り）」を付けて完了節へ）。会議で報告されたものは議事録作成時にも AI が提案する |
+| 「タスクを整理したい」「T-n を詳細化したい」「子タスクに分けたい」 | 下の手順で `tasks/yyyymmdd_<slug>.md` を作る |
+| 「いま開いているタスクは？」 | 台帳の進行中節を読む |
+
+タスクファイルを作る手順（AI が担当者と壁打ちする）:
+
+1. 台帳の該当行・出典の議事録（そのテーマの「議事内容」）・`docs/wiki/index.md` の進行表を読む。同じテーマのタスクファイルが既にあれば、新規に作らず更新として進める。
+2. 運用ガイド 4-7 の節（目的・背景・やること・完了条件・判断の観点・制約・未確定事項）を 1 問ずつ聞いて固める。根拠を添えた提案はしてよいが、未合意の「やること」「完了条件」を確定させない。議事録・会話に無い担当・期限・事実を作らない。
+3. ファイルの全文を見せて承認を取ってから保存し、台帳の該当行の「詳細」列にリンクを足す（行が無ければ進行中節に 1 行足す）。
+4. 「やること」を子タスクとして台帳に載せるかを聞き、載せる項目は子の行（親はこのファイルを指す行）を足して、項目の末尾に `（T-n）` を付ける。
 
 ### 4. 振り返り（retrospect-topic 相当）
 
@@ -504,8 +506,6 @@ format: slide
 | skill | トリガー例 | 用途 |
 |-------|-----------|------|
 | `meeting-minutes` | 「議事録化して」「メモを整えて」 | `_drafts/` → 議事録 + 台帳追記 + 決定案 + `llms.txt` + wiki 差分（ワークフロー 1） |
-| `task-breakdown` | 「タスクを整理したい」「#n を詳細化」 | 壁打ちで `tasks/yyyymmdd_<slug>.md` を作り、子タスク案を並べる（ワークフロー 3） |
-| `task-issue` | 「起票して」「Issue にして」 | 登録計画の承認後に GitHub Issue 作成・Project 取り込み・台帳の書き戻し（ワークフロー 3） |
 | `grill-me` | 「壁打ちしたい」「論点を整理したい」「プランを精査して」 | 前提を疑う批判的壁打ち。論点整理 md を残す（ワークフロー 5） |
 | `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5） |
 | `writing-plans` | 「実装プランを書いて」 | 設計書から実装計画を作る |
@@ -521,8 +521,7 @@ format: slide
 
 | 正本 | 転写先 | 同期するとき |
 |------|--------|--------------|
-| `docs/guide/project-ops-guide.md` 4 節（議事録の構成・ネクストアクション表・台帳・下書き・前回からの進捗・決定の判定・wiki 差分の範囲・保存前の確認・タスクファイルの型） | 本ファイル「推奨ワークフロー」1〜3 の要約／`tasks/index.md` の凡例／`llms.txt`・`README.md` の説明 | 列・状態の値・番号の規則・判定基準を変えたとき |
-| `docs/guide/project-ops-guide.md` 3 節（タスクのツールと動線） | `docs/wiki/index.md`「進行」表の「タスクのツール」行の選択肢 | ツールの選択肢・動線を変えたとき |
+| `docs/guide/project-ops-guide.md` 3・4 節（タスクの持ち方・議事録の構成・ネクストアクション表・台帳・決定の判定・wiki 差分の範囲・保存前の確認・タスクファイルの型） | 本ファイル「推奨ワークフロー」1〜3 の要約／`tasks/index.md` の凡例／`llms.txt`・`README.md` の説明 | 列・ID・状態の値・番号の規則・判定基準を変えたとき |
 | 本ファイル「frontmatter スキーマ」 | `scripts/lint-frontmatter.ts` の `VALID_TYPES`・`VALID_STATUSES`・`REQUIRED_FIELDS` | type・status・必須フィールドを変えたとき |
 | 本ファイル「ディレクトリ構造」 | `README.md` の早見表／`docs/wiki/index.md`「歩き方」 | ディレクトリを増減したとき |
 

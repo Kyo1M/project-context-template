@@ -31,7 +31,7 @@ clone したディレクトリで **Claude Code（または好みの AI コー�
 
 AI は `AGENTS.md` の「プロジェクト初期セットアップフロー」セクションに従って:
 
-1. プロジェクト名・概要・ステークホルダー・前提・進行・タスクのツール・初期トピックを対話的にヒアリング
+1. プロジェクト名・概要・ステークホルダー・前提・進行・定例・初期トピックを対話的にヒアリング
 2. `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` / `tasks/index.md` のプレースホルダを置換
 3. 初期トピックハブを作成（指定があれば）
 4. `scripts/` の lint を実行して整合性を確認
@@ -77,7 +77,7 @@ docs/
 └── explorations/   AI 壁打ち成果物（HTML 主軸）
 tasks/
 ├── index.md        タスク台帳（タスクの一覧と状態の正本）
-└── yyyymmdd_<slug>.md  分量のある要件・仕様（Issue や下書きの本文に収まらないものだけ）
+└── yyyymmdd_<slug>.md  分量のある要件・仕様（台帳の 1 行に収まらないものだけ）
 llms.txt            LLM 向け全体索引
 AGENTS.md           LLM 運用契約（契約と要点）
 CLAUDE.md           AGENTS.md を参照する短いリダイレクト
@@ -127,9 +127,9 @@ HTML はファイル先頭に同じ内容を HTML コメント (`<!-- --- ... --
 | 状況 | やること |
 |------|----------|
 | 会議中 | `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に走り書き |
-| 会議後 | Claude に「議事録化して」と依頼（`meeting-minutes` skill）→ `minutes/` に議事録（5 列のネクストアクション表・タスク登録の下書き）、`tasks/index.md` に追記、重い決定だけ `decisions/` の案、`llms.txt`・wiki の差分案 |
-| タスクを GitHub Issue にしたい時 | Claude に「起票して」と依頼（`task-issue` skill）→ 登録計画を承認 → Issue 作成・Project 取り込み・台帳の書き戻し |
-| タスクを整理・分解したい時 | Claude に「#n を整理したい」と依頼（`task-breakdown` skill）→ `tasks/yyyymmdd_<slug>.md` に要件・やること・完了条件 |
+| 会議後 | Claude に「議事録化して」と依頼（`meeting-minutes` skill）→ `minutes/` に議事録、`tasks/index.md` に追記（会議で報告された着手・完了も反映）、重い決定だけ `decisions/` の案、`llms.txt`・wiki の差分案 |
+| タスクを整理・分解したい時 | Claude に「T-n を整理したい」と依頼 → 壁打ちで `tasks/yyyymmdd_<slug>.md` に要件・やること・完了条件、台帳の「詳細」列にリンク |
+| タスクに着手した・終えた時 | `tasks/index.md` の状態を直す（完了は完了日を書いて完了節へ） |
 | 会議外でタスクが出た時 | `tasks/index.md` の進行中節に 1 行足す（出典 `チャット`／`壁打ち`＋日付） |
 | 何かを決めた時 | Claude に「ADR 化して」と依頼 → `decisions/` にファイル生成、wiki「主な決定」表に 1 行 |
 | 過去を振り返りたい時 | Claude に「`<topic>` の経緯を振り返って」と依頼 |
@@ -153,7 +153,7 @@ PR でいずれかが落ちた場合は frontmatter を修正してから再 pus
 
 ## カスタマイズ
 
-- **タスク管理ツール**: 一覧と状態は `tasks/index.md`（台帳）が持ち、進捗を追うツール（なし（表のみ）／GitHub Issue／外部ボード）は `docs/wiki/index.md` の「進行」表で案件ごとに選ぶ。動線は `docs/guide/project-ops-guide.md` 3 節
+- **タスク管理**: 一覧と状態は `tasks/index.md`（台帳）、分量のある要件は `tasks/yyyymmdd_<slug>.md` で持ち、GitHub Issue などの外部ツールとは連携しない。持ち方は `docs/guide/project-ops-guide.md` 3 節
 - **新規 skill 追加**: プロジェクト固有の skill が必要になったら `.claude/skills/` を作って配置（Claude Code が自動認識）
 - **`record-decision` / `retrospect-topic` の skill 化**: AGENTS.md の prose 指示が安定化し、複数プロジェクトで再利用したくなったら skill に昇格
 

@@ -8,7 +8,7 @@
 ## 運用契約
 
 - [AGENTS.md](./AGENTS.md): このリポジトリの LLM 運用契約。ディレクトリ構造、命名規約、frontmatter スキーマ、Git 運用、推奨ワークフローを定義
-- [docs/guide/project-ops-guide.md](./docs/guide/project-ops-guide.md): 運用ガイド。議事録・ネクストアクション表・タスク台帳・決定ファイル・wiki 差分の型の正本と、タスクのツールごとの動線
+- [docs/guide/project-ops-guide.md](./docs/guide/project-ops-guide.md): 運用ガイド。議事録・ネクストアクション表・タスク台帳・タスクファイル・決定ファイル・wiki 差分の型の正本と、タスクの持ち方
 - [README.md](./README.md): 人間向けの利用ガイド
 
 ## Wiki

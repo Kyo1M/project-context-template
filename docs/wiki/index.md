@@ -1,7 +1,7 @@
 ---
 type: wiki
 title: プロジェクト概要
-date: {{TODAY}}
+date: "{{TODAY}}"
 status: active
 topics: [overview]
 tags: []
@@ -36,8 +36,6 @@ summary: プロジェクトの「いま」（目的・前提・進行・主な�
 | スケジュール（いつまでに何を出すか） | |
 | 定例（曜日・参加者） | |
 | 議事録を作る人 | |
-| タスクのツール | なし（表のみ）／GitHub Issue（リポジトリ: <org>/<repo>、Project: <URL>）／外部ボード（Teams ボード等） のいずれか。一覧と状態は `tasks/index.md` |
-| メンバー | 名前: GitHub ID（GitHub Issue を使う案件だけ） |
 
 ## 主な決定
 
