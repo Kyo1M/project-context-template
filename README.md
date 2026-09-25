@@ -9,7 +9,7 @@
 ## このテンプレの目的
 
 - プロジェクトごとに同じ構造のコンテキスト・リポジトリを即座に立ち上げる
-- 議事メモ → 議事録 → 決定事項 / タスクの派生を一貫した規約で記録する
+- 議事メモ → 議事録 → タスク台帳 / 決定事項の派生を一貫した規約で記録し、タスクの一覧と状態を 1 か所（`tasks/index.md`）で持つ
 - LLM が「これまでの経緯」「現在の決定」「未解決論点」を一括把握できる索引層を備える
 - 過去の議論の振り返りと AI 壁打ちによる今後の方針検討を、同じリポジトリ内で完結させる
 
@@ -31,8 +31,8 @@ clone したディレクトリで **Claude Code（または好みの AI コー�
 
 AI は `AGENTS.md` の「プロジェクト初期セットアップフロー」セクションに従って:
 
-1. プロジェクト名・概要・ステークホルダー・初期トピックを対話的にヒアリング
-2. `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` のプレースホルダを置換
+1. プロジェクト名・概要・ステークホルダー・前提・進行・タスクのツール・初期トピックを対話的にヒアリング
+2. `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` / `tasks/index.md` のプレースホルダを置換
 3. 初期トピックハブを作成（指定があれば）
 4. `scripts/` の lint を実行して整合性を確認
 5. セットアップ用セクションの削除を提案
@@ -57,7 +57,7 @@ grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
 
 ### 4. 運用開始
 
-最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めるのがおすすめ。普段の運用は `AGENTS.md` の「推奨ワークフロー」を参照。
+最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めるのがおすすめ。普段の運用は `AGENTS.md` の「推奨ワークフロー」と、型の正本 `docs/guide/project-ops-guide.md` を参照。
 
 ---
 
@@ -65,17 +65,21 @@ grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
 
 ```
 docs/
-├── minutes/        議事録（_drafts/ に議事メモ）
-├── decisions/      決定事項（ADR）
+├── minutes/        議事録（_drafts/ に議事メモ。定例ごとのサブフォルダ可）
+├── decisions/      決定事項（ADR。前提・定義・対象範囲・体制を変える重い決定だけ）
 ├── memo/           思考メモ
 ├── wiki/
-│   ├── index.md    プロジェクト概要・歩き方
+│   ├── index.md    プロジェクトの「いま」（目的・前提・進行・主な決定・未解決論点）と歩き方
 │   └── topics/     トピック横串ハブ
+├── guide/
+│   └── project-ops-guide.md  運用ガイド（議事録・タスク台帳・決定・wiki の型の正本）
 ├── deliverables/   クライアント説明資料（HTML 主軸）
 └── explorations/   AI 壁打ち成果物（HTML 主軸）
-tasks/              重いタスク（日常タスクは GitHub Issues）
+tasks/
+├── index.md        タスク台帳（タスクの一覧と状態の正本）
+└── yyyymmdd_<slug>.md  分量のある要件・仕様（Issue や下書きの本文に収まらないものだけ）
 llms.txt            LLM 向け全体索引
-AGENTS.md           LLM 運用契約（真実の源）
+AGENTS.md           LLM 運用契約（契約と要点）
 CLAUDE.md           AGENTS.md を参照する短いリダイレクト
 ```
 
@@ -123,8 +127,11 @@ HTML はファイル先頭に同じ内容を HTML コメント (`<!-- --- ... --
 | 状況 | やること |
 |------|----------|
 | 会議中 | `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に走り書き |
-| 会議後 | Claude に「議事録化して」と依頼 → `minutes/` に正式版、`decisions/` `tasks/` にドラフトが派生 |
-| 何かを決めた時 | Claude に「ADR 化して」と依頼 → `decisions/` にファイル生成 |
+| 会議後 | Claude に「議事録化して」と依頼（`meeting-minutes` skill）→ `minutes/` に議事録（5 列のネクストアクション表・タスク登録の下書き）、`tasks/index.md` に追記、重い決定だけ `decisions/` の案、`llms.txt`・wiki の差分案 |
+| タスクを GitHub Issue にしたい時 | Claude に「起票して」と依頼（`task-issue` skill）→ 登録計画を承認 → Issue 作成・Project 取り込み・台帳の書き戻し |
+| タスクを整理・分解したい時 | Claude に「#n を整理したい」と依頼（`task-breakdown` skill）→ `tasks/yyyymmdd_<slug>.md` に要件・やること・完了条件 |
+| 会議外でタスクが出た時 | `tasks/index.md` の進行中節に 1 行足す（出典 `チャット`／`壁打ち`＋日付） |
+| 何かを決めた時 | Claude に「ADR 化して」と依頼 → `decisions/` にファイル生成、wiki「主な決定」表に 1 行 |
 | 過去を振り返りたい時 | Claude に「`<topic>` の経緯を振り返って」と依頼 |
 | 方針を考えたい時 | Claude に「`<topic>` を壁打ちしたい」と依頼 → `explorations/` に HTML 出力 |
 | クライアント資料を作りたい時 | Claude に「`<topic>` のスライド作って」と依頼 → `deliverables/` に HTML 出力 |
@@ -146,7 +153,7 @@ PR でいずれかが落ちた場合は frontmatter を修正してから再 pus
 
 ## カスタマイズ
 
-- **タスク管理ツール**: テンプレ標準は GitHub Issues。Linear / Notion / Jira 等に差し替える場合は `AGENTS.md` の「ディレクトリの選び方」表を書き換える
+- **タスク管理ツール**: 一覧と状態は `tasks/index.md`（台帳）が持ち、進捗を追うツール（なし（表のみ）／GitHub Issue／外部ボード）は `docs/wiki/index.md` の「進行」表で案件ごとに選ぶ。動線は `docs/guide/project-ops-guide.md` 3 節
 - **新規 skill 追加**: プロジェクト固有の skill が必要になったら `.claude/skills/` を作って配置（Claude Code が自動認識）
 - **`record-decision` / `retrospect-topic` の skill 化**: AGENTS.md の prose 指示が安定化し、複数プロジェクトで再利用したくなったら skill に昇格
 
