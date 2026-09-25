@@ -196,7 +196,7 @@ yyyymmdd_<kebab-case-slug>.{md,html}
 ---
 type: minutes | decision | memo | wiki | task | deliverable | exploration | topic
 title: 任意の日本語タイトル
-date: YYYY-MM-DD
+date: "YYYY-MM-DD"   # 引用符付き（YAML が日付型に変換するのを防ぐ）
 status: draft | active | superseded | archived | done | cancelled
 topics: []           # トピックスラグの配列。docs/wiki/topics/<slug>.md と対応
 tags: []             # 自由タグ
@@ -316,7 +316,7 @@ format: slide
 ### 1. 議事録作成フロー
 
 **会議中:**
-- `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に走り書き。frontmatter は最低限（`type: minutes`、`status: draft`、`topics`）でよい。
+- `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に走り書き。形式は自由（frontmatter は無くてよい。`_drafts/` は lint の対象外）。
 - 録音 / 文字起こしがあれば、同 `_drafts/` に `yyyymmdd_<topic>-transcript.txt` 等で併置。文字起こしだけだと途中の議論が落ちるので、自分で取ったメモも一緒に渡す。
 
 **会議直後:**

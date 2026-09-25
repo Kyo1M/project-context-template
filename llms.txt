@@ -21,11 +21,11 @@
 
 ## Decisions
 
-<!-- 全件。例: - [docs/decisions/20260609_sales-tax-exclusive.md](./docs/decisions/20260609_sales-tax-exclusive.md): 売上は税抜で集計する -->
+<!-- 全件。形式: - [docs/decisions/yyyymmdd_<slug>.md](./docs/decisions/yyyymmdd_<slug>.md): <決定の要旨> -->
 
 ## Recent Minutes
 
-<!-- 直近 5 件程度。例: - [docs/minutes/20260609_kickoff.md](./docs/minutes/20260609_kickoff.md): キックオフ -->
+<!-- 直近 5 件程度。形式: - [docs/minutes/yyyymmdd_<slug>.md](./docs/minutes/yyyymmdd_<slug>.md): <会議名と要点> -->
 
 ## Deliverables
 
