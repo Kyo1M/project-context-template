@@ -98,7 +98,7 @@ git push
 
 **7. ユーザーに案内する:**
 
-> セットアップ完了です。最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めると良いです。普段の運用は AGENTS.md の「推奨ワークフロー」と `docs/guide/project-ops-guide.md` を参照してください。
+> セットアップ完了です。最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めると良いです。普段の運用は AGENTS.md の「推奨ワークフロー」と `docs/guide/project-ops-guide.md` を参照してください。分析案件なら、使うテーブルの定義を `table-definition` skill で整理すると、集計の前提（粒度・キー・注意点）が wiki に残ります。
 
 ### 手動セットアップ（AI を使わない場合）
 
@@ -510,6 +510,7 @@ format: slide
 | `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5。実装が完了したら削除） |
 | `writing-plans` | 「実装プランを書いて」 | 設計書から実装計画を作る |
 | `deck-outline` → `html-slide-deck` → `deck-critique` | 「スライド作って」「説明資料を」「資料をレビューして」 | 構成 md → `.dc.html` → 批評（ワークフロー 6） |
+| `table-definition` | 「テーブル定義を整理したい」「定義書を取り込んで」 | 分析案件だけ。使うテーブルを 1 論理テーブル 1 YAML（`docs/tables/`）と wiki「データ」表に整理する。置き場は初回実行時に承認後に追加 |
 
 `record-decision` / `retrospect-topic` / トピックハブ更新 / `llms.txt` 更新はこの AGENTS.md の prose 指示で運用します。差分が育ってきた段階で skill 化を検討します。
 
