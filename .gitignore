@@ -1,0 +1,12 @@
+.DS_Store
+*.swp
+*.swo
+.env
+.env.local
+node_modules/
+.idea/
+.vscode/
+
+# 受領資料の原本は手元にだけ置く（認証情報・個人名が入ることがある）
+docs/references/*
+!docs/references/.gitkeep
