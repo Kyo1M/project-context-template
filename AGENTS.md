@@ -99,7 +99,7 @@ git push
 
 **7. ユーザーに案内する:**
 
-> セットアップ完了です。最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めると良いです。普段の運用は AGENTS.md の「推奨ワークフロー」と `docs/guide/project-ops-guide.md` を参照してください。分析案件なら、使うテーブルの定義を `table-definition` skill で整理すると、集計の前提（粒度・キー・注意点）が wiki に残ります。
+> セットアップ完了です。最初の議事録は、会議の録音から作った文字起こし（`docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt`）と会議中の議事メモ（`docs/minutes/_drafts/yyyymmdd_<topic>-memo.md`）を置いて「議事録化して」と頼むと作れます。普段の運用は AGENTS.md の「推奨ワークフロー」と `docs/guide/project-ops-guide.md` を参照してください。分析案件なら、使うテーブルの定義を `table-definition` skill で整理すると、集計の前提（粒度・キー・注意点）が wiki に残ります。
 
 ### 手動セットアップ（AI を使わない場合）
 
@@ -129,7 +129,7 @@ grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
 
 ```
 docs/
-├── minutes/        議事録（_drafts/ に議事メモ。定例ごとのサブフォルダ可）
+├── minutes/        議事録（_drafts/ に文字起こしと議事メモ。定例ごとのサブフォルダ可）
 ├── decisions/      決定事項（ADR 形式。前提・定義・対象範囲・体制を変える重い決定だけ）
 ├── memo/           思考メモ・走り書き
 ├── wiki/
@@ -150,7 +150,7 @@ llms.txt            LLM 向け全体索引（要約 + リンク集）
 
 | 書きたいもの | 行き先 |
 |--------------|--------|
-| 会議中の走り書き | `docs/minutes/_drafts/` |
+| 会議の文字起こし・議事メモ | `docs/minutes/_drafts/` |
 | 整形された議事録 | `docs/minutes/`（定例が複数あれば `docs/minutes/<定例スラグ>/`） |
 | 何かを決めた記録 | 議事録の「決定事項」。前提・定義・対象範囲・体制を変える決定だけ `docs/decisions/` |
 | アイデア・問い・暫定的な思考 | `docs/memo/` |
@@ -317,15 +317,16 @@ format: slide
 ### 1. 議事録作成フロー
 
 **会議中:**
-- `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に走り書き。形式は自由（frontmatter は無くてよい。`_drafts/` は lint の対象外）。
-- 録音 / 文字起こしがあれば、同 `_drafts/` に `yyyymmdd_<topic>-transcript.txt` 等で併置。文字起こしだけだと途中の議論が落ちるので、自分で取ったメモも一緒に渡す。
+- 会議を録音する。議事録の主な材料は、録音から作った文字起こし（会議ツールの自動文字起こし・AI 要約でよい）。会議が終わったら `docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt` 等で置く。
+- 並行して `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に要点をメモする。文字起こしに残りにくいこと（画面共有で見た資料や数字、その場の決定の念押し、自分の判断や気になった点、会議後の補足）を中心に書く。形式は自由（frontmatter は無くてよい。`_drafts/` は lint の対象外）。
+- 録音できない会議はメモだけでよい。議事録はメモから作る。
 
 **会議直後:**
 - ユーザーが「議事録化して」「メモを整えて」と依頼したら、`meeting-minutes` skill を使用する。1 回の実行で次が出る（型はすべて運用ガイド 4 節）:
 
 | 出るもの | 反映 |
 |---|---|
-| 議事録 `docs/minutes/yyyymmdd_<topic>.md`（概要・決定事項・確認事項・ネクストアクション表・議事内容・メモ。`derived_from: [元のメモパス]`） | 自動。保存前に「保存前の確認」（未定の担当・期限／親の提案／台帳の状態の変更／タスクファイルの `status: done`）を 1 回だけ聞く |
+| 議事録 `docs/minutes/yyyymmdd_<topic>.md`（概要・決定事項・確認事項・ネクストアクション表・議事内容・メモ。`derived_from: [元の文字起こし・メモのパス]`） | 自動。保存前に「保存前の確認」（未定の担当・期限／親の提案／台帳の状態の変更／タスクファイルの `status: done`）を 1 回だけ聞く |
 | タスク台帳 `tasks/index.md` への追記（表の全行。ID `T-<n>`、状態 `未着手`）と、会議で報告された着手・完了の反映 | 追記は自動、状態の変更は保存前の確認で承認 |
 | 決定ファイルの案（前提・定義・対象範囲・体制を変える重い決定だけ。理由付き） | 承認してから保存 |
 | `llms.txt` の追記（Recent Minutes・Decisions） | 自動 |

@@ -145,7 +145,7 @@ async function main() {
     cwd: repoRoot,
     absolute: true,
     // docs/superpowers/ は brainstorming / writing-plans skill の設計書・実装計画の置き場、
-    // docs/minutes/_drafts/ は会議中の走り書き（frontmatter 任意）、
+    // docs/minutes/_drafts/ は会議の文字起こし・議事メモ（frontmatter 任意）、
     // docs/references/ は受領資料の原本（frontmatter なし）。いずれも lint の対象外
     ignore: ["**/.gitkeep", "docs/superpowers/**", "docs/minutes/_drafts/**", "docs/references/**"],
   });

@@ -9,7 +9,7 @@
 ## このテンプレの目的
 
 - プロジェクトごとに同じ構造のコンテキスト・リポジトリを即座に立ち上げる
-- 議事メモ → 議事録 → タスク台帳 / 決定事項の派生を一貫した規約で記録し、タスクの一覧と状態を 1 か所（`tasks/index.md`）で持つ
+- 会議の録音（文字起こし）と議事メモ → 議事録 → タスク台帳 / 決定事項の派生を一貫した規約で記録し、タスクの一覧と状態を 1 か所（`tasks/index.md`）で持つ
 - LLM が「これまでの経緯」「現在の決定」「未解決論点」を一括把握できる索引層を備える
 - 過去の議論の振り返りと AI 壁打ちによる今後の方針検討を、同じリポジトリ内で完結させる
 
@@ -65,7 +65,7 @@ grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
 
 ### 4. 運用開始
 
-最初の議事録は `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` から書き始めるのがおすすめ。普段の運用は `AGENTS.md` の「推奨ワークフロー」と、型の正本 `docs/guide/project-ops-guide.md` を参照。
+最初の議事録は、会議を録音して作った文字起こし（`docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt`）と、会議中の議事メモ（`docs/minutes/_drafts/yyyymmdd_<topic>-memo.md`）を置いて始めるのがおすすめ。録音できない会議はメモだけでもよい。普段の運用は `AGENTS.md` の「推奨ワークフロー」と、型の正本 `docs/guide/project-ops-guide.md` を参照。
 
 ---
 
@@ -73,7 +73,7 @@ grep -r "{{" --include="*.md" --include="*.txt" --include="*.html" .
 
 ```
 docs/
-├── minutes/        議事録（_drafts/ に議事メモ。定例ごとのサブフォルダ可）
+├── minutes/        議事録（_drafts/ に文字起こしと議事メモ。定例ごとのサブフォルダ可）
 ├── decisions/      決定事項（ADR。前提・定義・対象範囲・体制を変える重い決定だけ）
 ├── memo/           思考メモ
 ├── wiki/
@@ -135,7 +135,8 @@ HTML はファイル先頭に同じ内容を HTML コメント (`<!-- --- ... --
 
 | 状況 | やること |
 |------|----------|
-| 会議中 | `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` に走り書き |
+| 会議中 | 会議を録音し、要点・決定・気になった点を `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` にメモ |
+| 会議直後 | 録音の文字起こしを `docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt` として置く |
 | 会議後 | Claude に「議事録化して」と依頼（`meeting-minutes` skill）→ `minutes/` に議事録、`tasks/index.md` に追記（会議で報告された着手・完了も反映）、重い決定だけ `decisions/` の案、`llms.txt`・wiki の差分案 |
 | タスクを整理・分解したい時 | Claude に「T-n を整理したい」と依頼 → 壁打ちで `tasks/yyyymmdd_<slug>.md` に要件・やること・完了条件、台帳の「詳細」列にリンク |
 | タスクに着手した・終えた時 | `tasks/index.md` の状態を直す（完了は完了日を書いて完了節へ） |

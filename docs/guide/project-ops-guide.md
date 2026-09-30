@@ -98,7 +98,7 @@ topics: []
 tags: []
 attendees: []
 meeting_type: kickoff | review | sync | ...
-derived_from: [docs/minutes/_drafts/yyyymmdd_<slug>-memo.md]
+derived_from: [docs/minutes/_drafts/yyyymmdd_<slug>-transcript.txt, docs/minutes/_drafts/yyyymmdd_<slug>-memo.md]
 related: []
 ---
 
@@ -282,7 +282,7 @@ related: []
 
 ## 5. 議事録のフォルダ分け
 
-定例が複数ある案件は `docs/minutes/<定例スラグ>/` に分けてよい（例: `docs/minutes/client-sync/`、`docs/minutes/internal-weekly/`）。分けたら `AGENTS.md` の「ディレクトリの選び方」表に 1 行足します。台帳は分けず、1 つの `tasks/index.md` に全定例のタスクを置きます（ID は通し番号なので重なりません）。走り書きは分けずに `docs/minutes/_drafts/` に置いて構いません。
+定例が複数ある案件は `docs/minutes/<定例スラグ>/` に分けてよい（例: `docs/minutes/client-sync/`、`docs/minutes/internal-weekly/`）。分けたら `AGENTS.md` の「ディレクトリの選び方」表に 1 行足します。台帳は分けず、1 つの `tasks/index.md` に全定例のタスクを置きます（ID は通し番号なので重なりません）。文字起こしと議事メモは分けずに `docs/minutes/_drafts/` に置いて構いません。
 
 ## 6. 棚卸し
 
