@@ -136,8 +136,7 @@ HTML はファイル先頭に同じ内容を HTML コメント (`<!-- --- ... --
 | 状況 | やること |
 |------|----------|
 | 会議中 | 会議を録音し、要点・決定・気になった点を `docs/minutes/_drafts/yyyymmdd_<topic>-memo.md` にメモ |
-| 会議直後 | 録音の文字起こしを `docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt` として置く |
-| 会議後 | Claude に「議事録化して」と依頼（`meeting-minutes` skill）→ `minutes/` に議事録、`tasks/index.md` に追記（会議で報告された着手・完了も反映）、重い決定だけ `decisions/` の案、`llms.txt`・wiki の差分案 |
+| 会議後 | 録音の文字起こしを `docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt` として置き、Claude に「議事録化して」と依頼（`meeting-minutes` skill）→ `minutes/` に議事録、`tasks/index.md` に追記（会議で報告された着手・完了も反映）、重い決定だけ `decisions/` の案、`llms.txt`・wiki の差分案 |
 | タスクを整理・分解したい時 | Claude に「T-n を整理したい」と依頼 → 壁打ちで `tasks/yyyymmdd_<slug>.md` に要件・やること・完了条件、台帳の「詳細」列にリンク |
 | タスクに着手した・終えた時 | `tasks/index.md` の状態を直す（完了は完了日を書いて完了節へ） |
 | 会議外でタスクが出た時 | `tasks/index.md` の進行中節に 1 行足す（出典 `チャット`／`壁打ち`＋日付） |
