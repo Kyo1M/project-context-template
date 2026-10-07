@@ -144,6 +144,7 @@ tasks/
 ├── index.md        タスク台帳（タスクの一覧と状態の正本）
 └── yyyymmdd_<slug>.md  分量のある要件・仕様（1 タスク 1 ファイル。台帳の 1 行に収まらないものだけ）
 llms.txt            LLM 向け全体索引（要約 + リンク集）
+scripts/            frontmatter の lint（lint-frontmatter.ts）と、ドキュメントの点検（check_docs.py・check_docs.toml）
 ```
 
 ディレクトリの選び方:
@@ -206,6 +207,8 @@ derived_from: []     # 派生元ファイルのリポジトリ相対パス（議
 related: []          # 横の関連ファイル
 ---
 ```
+
+任意の共通フィールド: `reviewed: "YYYY-MM-DD"`（ドキュメントの点検で内容を確かめた日。推奨ワークフロー 9）。
 
 `status` の使い分け: `minutes` は `draft` 始まり、`decision`・`wiki`・`task` は `active` 始まり。`superseded` は後の決定で置き換えた `decision`（古いファイルは消さない）と、置き換わった資料・タスク。`done` は台帳で完了にしたタスクのファイル（`meeting-minutes` skill が提案し、承認後に直す）。`cancelled` は見送ったタスクのファイル。
 
@@ -502,6 +505,18 @@ format: slide
    - [tasks/index.md] タスク台帳（個別列挙しない）
    ```
 
+### 9. ドキュメントの点検
+
+文書の数値・状態・一覧が、元のファイルの変更に追いついているかを定期的に点検する（`doc-maintenance` skill。無ければこの手順で行う）。
+
+- 時期：月初と、`docs/deliverables/` の資料を外に共有する前
+- 点検：`python3 scripts/check_docs.py`（Python 3.11 以上。対象は `scripts/check_docs.toml`）。スクリプトは一覧を出すだけで、ファイルは書き換えない
+- 見ること：元のファイル（frontmatter の `derived_from`・`related`）が後で更新された文書、draft のまま日数が過ぎた文書、`related` が置き換え済み（`superseded`）の文書を指しているもの、リンクの切れ、`llms.txt` に載っていない決定・トピック・資料
+- 対象：中身が変わり続ける文書（wiki・トピックハブ・運用ガイド・資料）。議事録・メモ・決定はその時点の記録なので、元のファイルが変わっても直さない
+- 直し方：1 件ずつ文書と元のファイルの差分を読み、直す案をまとめて見せてから直す。`audience: client` の資料は変える文を先に見せる。本文に更新の経緯は書かない（差分は git に残る）
+- 確かめて直さなかった文書にも、frontmatter の `reviewed` に確かめた日を書く（書かないと次の点検でまた出る）
+- 点検スクリプトの正本は [Kyo1M/skills](https://github.com/Kyo1M/skills) の `doc-maintenance/scripts/check_docs.py`。設定（`check_docs.toml`）はリポジトリに合わせて直してよい
+
 ---
 
 ## 推奨 skill 一覧
@@ -515,6 +530,7 @@ format: slide
 | 中心 | `meeting-minutes` | 「議事録化して」「メモを整えて」 | `_drafts/` → 議事録 + 台帳追記 + 決定案 + `llms.txt` + wiki 差分（ワークフロー 1） | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
 | 中心 | `grill-me` | 「壁打ちしたい」「論点を整理したい」「プランを精査して」 | 前提を疑う批判的壁打ち。論点整理 md を残す（ワークフロー 5） | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
 | 中心 | `table-definition` | 「テーブル定義を整理したい」「定義書を取り込んで」 | 分析案件だけ。使うテーブルを 1 論理テーブル 1 YAML（`docs/tables/`）と wiki「データ」表に整理する。置き場は初回実行時に承認後に追加 | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
+| 中心 | `doc-maintenance` | 「ドキュメントを点検して」「月初の点検」 | 古くなった文書・置き換え済みへの参照・リンクの切れ・`llms.txt` の漏れを見つけて直す（ワークフロー 9） | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
 | 設計・実装 | `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5。実装が完了したら削除） | [obra/superpowers](https://github.com/obra/superpowers) |
 | 設計・実装 | `writing-plans` | 「実装プランを書いて」 | 設計書から実装計画を作る | [obra/superpowers](https://github.com/obra/superpowers) |
 | 資料作成（任意） | `deck-outline` → `html-slide-deck` → `deck-critique` | 「スライド作って」「説明資料を」「資料をレビューして」 | 構成 md → `.dc.html` → 批評（ワークフロー 6）。デザインは作者のデザインシステムなので、使う場合は自分の型に差し替える | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
@@ -543,6 +559,8 @@ npx skills add Kyo1M/skills --skill meeting-minutes    # 1 つ選んで入れる
 | `docs/guide/project-ops-guide.md` 3・4・7 節（タスクの持ち方・議事録の構成・ネクストアクション表・台帳・決定の判定・wiki 差分の範囲・保存前の確認・タスクファイルの型） | 本ファイル「推奨ワークフロー」1〜3 の要約／`tasks/index.md` の凡例／`llms.txt`・`README.md` の説明 | 列・ID・状態の値・番号の規則・判定基準を変えたとき |
 | 本ファイル「frontmatter スキーマ」 | `scripts/lint-frontmatter.ts` の `VALID_TYPES`・`VALID_STATUSES`・`REQUIRED_FIELDS` | type・status・必須フィールドを変えたとき |
 | 本ファイル「ディレクトリ構造」 | `README.md` の早見表／`docs/wiki/index.md`「歩き方」 | ディレクトリを増減したとき |
+| Kyo1M/skills の `doc-maintenance/scripts/check_docs.py` | `scripts/check_docs.py` | 点検スクリプトの正本が変わったとき |
+| 本ファイル「ディレクトリ構造」・推奨ワークフロー 8（`llms.txt` に全件を載せる置き場） | `scripts/check_docs.toml` の `targets`・`inventory` | 置き場や `llms.txt` に載せる範囲を変えたとき |
 
 ---
 

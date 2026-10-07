@@ -18,7 +18,7 @@
 ## 必要なもの
 
 - `AGENTS.md` を読む AI コーディングエージェント（Claude Code・Codex など）
-- lint を動かす場合は Node.js 20 以上
+- lint を動かす場合は Node.js 20 以上、ドキュメントの点検（`scripts/check_docs.py`）を動かす場合は Python 3.11 以上
 - 推奨 skill（任意）: `meeting-minutes` ほか。無くても `AGENTS.md` と運用ガイドの型だけで運用できる。一覧・出どころ・導入手順は `AGENTS.md` の「推奨 skill 一覧」
 
 ---
@@ -88,6 +88,7 @@ tasks/
 ├── index.md        タスク台帳（タスクの一覧と状態の正本）
 └── yyyymmdd_<slug>.md  分量のある要件・仕様（台帳の 1 行に収まらないものだけ）
 llms.txt            LLM 向け全体索引
+scripts/            frontmatter の lint とドキュメントの点検
 AGENTS.md           LLM 運用契約（契約と要点）
 CLAUDE.md           AGENTS.md を参照する短いリダイレクト
 ```
@@ -124,6 +125,7 @@ topics: []
 tags: []
 derived_from: []     # 派生元ファイルへのリポジトリ相対パス
 related: []
+reviewed: YYYY-MM-DD # 任意。ドキュメントの点検で内容を確かめた日
 ---
 ```
 
@@ -144,6 +146,7 @@ HTML はファイル先頭に同じ内容を HTML コメント (`<!-- --- ... --
 | 過去を振り返りたい時 | Claude に「`<topic>` の経緯を振り返って」と依頼 |
 | 方針を考えたい時 | Claude に「`<topic>` を壁打ちしたい」と依頼 → `explorations/` に HTML 出力 |
 | クライアント資料を作りたい時 | Claude に「`<topic>` のスライド作って」と依頼 → `deliverables/` に HTML 出力 |
+| 月初・資料を共有する前 | Claude に「ドキュメントを点検して」と依頼（`doc-maintenance` skill。`scripts/check_docs.py` の一覧をもとに、古くなった wiki・資料、置き換え済みへの参照、リンクの切れ、`llms.txt` の漏れを直す案が出る） |
 
 #### Git ワークフロー
 

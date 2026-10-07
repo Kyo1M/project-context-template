@@ -1,0 +1,38 @@
+# ドキュメントの点検の設定（scripts/check_docs.py が読む。点検の流れは AGENTS.md の推奨ワークフロー 9）
+
+# 古くなっていないか・draft のままか・related が置き換え済みを指していないかを見る文書（glob）。
+# 中身が変わり続ける文書だけにする（議事録・メモ・決定は、その時点の記録なので入れない）。
+# frontmatter の derived_from・related に挙げた元のファイルが、文書より後に更新されると知らせる。
+# HTML の文書は、先頭の <!-- --> の中の frontmatter を読む
+targets = [
+  "docs/wiki/index.md",
+  "docs/wiki/topics/*.md",
+  "docs/guide/*.md",
+  "docs/deliverables/*.md",
+  "docs/deliverables/*.html",
+]
+
+# リンクの切れを見る文書（glob。Markdown のリンクだけ。HTML のリンクは CI の lychee が見る）
+link_targets = ["*.md", "docs/**/*.md", "tasks/*.md"]
+
+# 点検しない文書（glob）
+exclude = ["docs/minutes/_drafts/*"]
+
+# draft のまま何日で知らせるか
+draft_days = 30
+
+# 全件を llms.txt に載せる置き場（AGENTS.md の推奨ワークフロー 8）
+[[inventory]]
+files = "docs/decisions/*.md"
+exclude = [".gitkeep"]
+listed_in = "llms.txt"
+
+[[inventory]]
+files = "docs/wiki/topics/*.md"
+exclude = [".gitkeep"]
+listed_in = "llms.txt"
+
+[[inventory]]
+files = "docs/deliverables/*.html"
+exclude = []
+listed_in = "llms.txt"
