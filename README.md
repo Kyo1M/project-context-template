@@ -19,7 +19,7 @@
 
 - `AGENTS.md` を読む AI コーディングエージェント（Claude Code・Codex など）
 - lint を動かす場合は Node.js 20 以上
-- 推奨 skill（任意）: `meeting-minutes` ほか。無くても `AGENTS.md` と運用ガイドの型だけで運用できる。一覧・出どころ・導入手順は `AGENTS.md` の「推奨 skill 一覧」
+- 推奨 skill（任意）: `meeting-minutes` ほか（分析案件なら `table-definition`・`metric-definition` も）。無くても `AGENTS.md` と、そこが指すガイドの型だけで運用できる。一覧・出どころ・導入手順は `AGENTS.md` の「推奨 skill 一覧」
 
 ---
 
@@ -40,7 +40,7 @@ clone したディレクトリで **Claude Code（または好みの AI コー�
 AI は `AGENTS.md` の「プロジェクト初期セットアップフロー」セクションに従って:
 
 1. プロジェクト名・概要・ステークホルダー・前提・進行・定例・初期トピックを対話的にヒアリング
-2. `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` / `tasks/index.md` のプレースホルダを置換
+2. `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` / `tasks/index.md` / `docs/guide/` の 2 本のガイドのプレースホルダを置換
 3. 初期トピックハブを作成（指定があれば）
 4. `scripts/` の lint を実行して整合性を確認
 5. セットアップ用セクションの削除を提案
@@ -80,7 +80,10 @@ docs/
 │   ├── index.md    プロジェクトの「いま」（目的・前提・進行・主な決定・未解決論点）と歩き方
 │   └── topics/     トピック横串ハブ
 ├── guide/
-│   └── project-ops-guide.md  運用ガイド（議事録・タスク台帳・決定・wiki の型の正本）
+│   ├── project-ops-guide.md  運用ガイド（議事録・タスク台帳・決定・wiki の型の正本）
+│   └── data-definition-guide.md  データ定義のガイド（テーブル定義・指標の定義の型の正本。分析案件だけ）
+├── tables/         テーブル定義（1 論理テーブル 1 YAML。分析案件で初めて使うときに作る）
+├── metrics/        指標の定義（1 指標 1 YAML。同上）
 ├── deliverables/   クライアント説明資料（HTML 主軸）
 ├── explorations/   AI 壁打ち成果物（HTML 主軸）
 └── references/     受領資料の原本・md に変換する前の資料（中身は git で追跡しない）
@@ -140,6 +143,7 @@ HTML はファイル先頭に同じ内容を HTML コメント (`<!-- --- ... --
 | タスクを整理・分解したい時 | Claude に「T-n を整理したい」と依頼 → 壁打ちで `tasks/yyyymmdd_<slug>.md` に要件・やること・完了条件、台帳の「詳細」列にリンク |
 | タスクに着手した・終えた時 | `tasks/index.md` の状態を直す（完了は完了日を書いて完了節へ） |
 | 会議外でタスクが出た時 | `tasks/index.md` の進行中節に 1 行足す（出典 `チャット`／`壁打ち`＋日付） |
+| 分析で使うテーブル・指標の定義を残したい時 | Claude に「テーブル定義を整理したい」「指標の定義を整理したい」と依頼（`table-definition`・`metric-definition` skill）→ `docs/tables/`・`docs/metrics/` に 1 テーブル・1 指標 1 YAML、wiki の「データ」表・「用語」表に 1 行。型は `docs/guide/data-definition-guide.md` |
 | 何かを決めた時 | Claude に「ADR 化して」と依頼 → `decisions/` にファイル生成、wiki「主な決定」表に 1 行 |
 | 過去を振り返りたい時 | Claude に「`<topic>` の経緯を振り返って」と依頼 |
 | 方針を考えたい時 | Claude に「`<topic>` を壁打ちしたい」と依頼 → `explorations/` に HTML 出力 |

@@ -9,6 +9,7 @@
 
 - [AGENTS.md](./AGENTS.md): このリポジトリの LLM 運用契約。ディレクトリ構造、命名規約、frontmatter スキーマ、Git 運用、推奨ワークフローを定義
 - [docs/guide/project-ops-guide.md](./docs/guide/project-ops-guide.md): 運用ガイド。議事録・ネクストアクション表・タスク台帳・タスクファイル・決定ファイル・wiki 差分の型の正本と、タスクの持ち方
+- [docs/guide/data-definition-guide.md](./docs/guide/data-definition-guide.md): データ定義のガイド。分析案件で使うテーブル定義（`docs/tables/`）と指標の定義（`docs/metrics/`）の YAML の型の正本と、作る流れ・初めて使うときに足すもの
 - [README.md](./README.md): 人間向けの利用ガイド
 
 ## Wiki
