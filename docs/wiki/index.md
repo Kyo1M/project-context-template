@@ -80,6 +80,7 @@ summary: プロジェクトの「いま」（目的・前提・進行・主な�
 | AI 壁打ちの過去ログ | `docs/explorations/` |
 | 受け取った資料の原本（手元だけ） | `docs/references/` |
 | 議事録・台帳・決定の型 | `docs/guide/project-ops-guide.md` |
+| テーブル定義・指標の定義の型（分析案件だけ） | `docs/guide/data-definition-guide.md` |
 | LLM 用全体索引 | `llms.txt` |
 
 運用ルールの詳細は [AGENTS.md](../../AGENTS.md) を参照。

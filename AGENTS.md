@@ -4,7 +4,7 @@
 
 人間は通常の Markdown を直接書きます。LLM はこの AGENTS.md と `llms.txt`、`docs/wiki/index.md`、`docs/wiki/topics/` のトピックハブから全体を一括把握できるよう、二層構造で運用します。
 
-このファイルは契約と要点だけを持ちます。議事録・ネクストアクション表・タスク台帳・タスクファイル・決定ファイル・wiki 差分の **型の正本は `docs/guide/project-ops-guide.md`** です。`meeting-minutes` skill はそのガイドの型に従って動きます（skill が無い環境でも、AI はガイドの型に従って同じものを作ります）。タスクの一覧と状態はこのリポジトリの台帳で持ち、既定では GitHub Issue などの外部のタスク管理ツールとは連携しません（つなぐ場合は運用ガイド 7 節）。
+このファイルは契約と要点だけを持ちます。議事録・ネクストアクション表・タスク台帳・タスクファイル・決定ファイル・wiki 差分の **型の正本は `docs/guide/project-ops-guide.md`** です。`meeting-minutes` skill はそのガイドの型に従って動きます（skill が無い環境でも、AI はガイドの型に従って同じものを作ります）。タスクの一覧と状態はこのリポジトリの台帳で持ち、既定では GitHub Issue などの外部のタスク管理ツールとは連携しません（つなぐ場合は運用ガイド 7 節）。分析案件で使うテーブル定義・指標の定義の YAML の型の正本は `docs/guide/data-definition-guide.md` です。
 
 ---
 
@@ -16,7 +16,7 @@
 
 AI（Claude Code 等）は、以下のいずれかに該当する場合、ユーザーへ「初期セットアップを実施しましょうか？」と自発的に確認してください:
 
-- `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` / `tasks/index.md` / `docs/guide/project-ops-guide.md` の中に `{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}` `{{TODAY}}` 等のプレースホルダが残っている
+- `AGENTS.md` / `README.md` / `docs/wiki/index.md` / `llms.txt` / `tasks/index.md` / `docs/guide/project-ops-guide.md` / `docs/guide/data-definition-guide.md` の中に `{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}` `{{TODAY}}` 等のプレースホルダが残っている
 - ユーザーが「セットアップしたい」「初期セットアップ」「setup」「初期化」等と発話
 
 ### セットアップ手順（AI が実行）
@@ -42,7 +42,7 @@ AI（Claude Code 等）は、以下のいずれかに該当する場合、ユー
 - `README.md`（タイトル等で参照していれば）
 - `docs/wiki/index.md`（`{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}` `{{STAKEHOLDERS}}` `{{TODAY}}`。手順 1 の前提・進行の各行も埋める）
 - `llms.txt`（`{{PROJECT_NAME}}` `{{PROJECT_SUMMARY}}`）
-- `tasks/index.md`・`docs/guide/project-ops-guide.md`（`{{TODAY}}`）
+- `tasks/index.md`・`docs/guide/project-ops-guide.md`・`docs/guide/data-definition-guide.md`（`{{TODAY}}`）
 
 `{{TODAY}}` は当日の `YYYY-MM-DD`。
 
@@ -99,7 +99,7 @@ git push
 
 **7. ユーザーに案内する:**
 
-> セットアップ完了です。最初の議事録は、会議の録音から作った文字起こし（`docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt`）と会議中の議事メモ（`docs/minutes/_drafts/yyyymmdd_<topic>-memo.md`）を置いて「議事録化して」と頼むと作れます。普段の運用は AGENTS.md の「推奨ワークフロー」と `docs/guide/project-ops-guide.md` を参照してください。分析案件なら、使うテーブルの定義を `table-definition` skill で整理すると、集計の前提（粒度・キー・注意点）が wiki に残ります。
+> セットアップ完了です。最初の議事録は、会議の録音から作った文字起こし（`docs/minutes/_drafts/yyyymmdd_<topic>-transcript.txt`）と会議中の議事メモ（`docs/minutes/_drafts/yyyymmdd_<topic>-memo.md`）を置いて「議事録化して」と頼むと作れます。普段の運用は AGENTS.md の「推奨ワークフロー」と `docs/guide/project-ops-guide.md` を参照してください。分析案件なら、使うテーブルの定義を `table-definition` skill、指標の計算方法を `metric-definition` skill で整理すると、集計の前提（粒度・キー・注意点、式・分子と分母・束ね方）が YAML と wiki に残ります（型は `docs/guide/data-definition-guide.md`）。
 
 ### 手動セットアップ（AI を使わない場合）
 
@@ -136,7 +136,10 @@ docs/
 │   ├── index.md    プロジェクトの「いま」（目的・前提・進行・主な決定・未解決論点・直近更新）と歩き方
 │   └── topics/     トピック横串ハブ（種別をまたいで関連ファイルを集約）
 ├── guide/
-│   └── project-ops-guide.md  運用ガイド（議事録・タスク台帳・決定・wiki の型の正本）
+│   ├── project-ops-guide.md  運用ガイド（議事録・タスク台帳・決定・wiki の型の正本）
+│   └── data-definition-guide.md  データ定義のガイド（テーブル定義・指標の定義の型の正本。分析案件だけ）
+├── tables/         テーブル定義（1 論理テーブル 1 YAML。分析案件で初めて使うときに作る）
+├── metrics/        指標の定義（1 指標 1 YAML。同上）
 ├── deliverables/   クライアント向け説明資料（HTML 主軸）
 ├── explorations/   AI 壁打ち成果物・複数案比較・プロトタイプ（HTML 主軸）
 └── references/     受領資料の原本・md に変換する前の資料（中身は git で追跡しない）
@@ -161,6 +164,7 @@ llms.txt            LLM 向け全体索引（要約 + リンク集）
 | 受け取った資料の原本（PDF・スライド・文書、Notion などのコピー）、md に変換する前の資料 | `docs/references/`（lint 対象外。中身は `.gitignore` で除外し、手元にだけ置く。認証情報や個人名が入った資料が履歴に残らないようにするため。追跡したい案件は `.gitignore` の該当 2 行を消す）。要点は `docs/wiki/` などに md でまとめ、出典には元の置き場（Drive・Notion の名前やリンク）を書く。手元にしかないパスなので `derived_from`・`related` には入れない |
 | 会議で出たアクション、会議外で出たタスク | `tasks/index.md`（台帳）。議事録作成時は AI が追記、会議外は人が 1 行足す |
 | 台帳の 1 行に収まらない要件・仕様 | `tasks/yyyymmdd_<slug>.md`（AI と壁打ちして作る。ワークフロー 3） |
+| 分析で使うテーブルの定義、指標の計算方法（分析案件だけ） | `docs/tables/<slug>.yaml`・`docs/metrics/<slug>.yaml`（1 テーブル・1 指標 1 ファイル）。置き場は初めて使うときに足す。型と足すものは `docs/guide/data-definition-guide.md` |
 | 設計書・実装計画（`brainstorming`・`writing-plans` skill の出力） | `docs/superpowers/`（superpowers の skill の既定の出力先。lint 対象外）。設計書に基づいて実装し、完了したら削除する（経緯は git 履歴と PR に残る） |
 
 ---
@@ -177,7 +181,7 @@ yyyymmdd_<kebab-case-slug>.{md,html}
 - セパレータ: `_`（日付とスラグの境界）
 - スラグ: ASCII 英小文字 + 数字 + `-`（kebab-case）
 - 日本語タイトルは frontmatter `title:` に記載する（ファイル名には入れない）
-- 例外: `docs/wiki/index.md`・`docs/wiki/topics/<slug>.md`・`docs/guide/*.md`・`tasks/index.md` は日付プレフィックス無し（長期的な集約ページのため）
+- 例外: `docs/wiki/index.md`・`docs/wiki/topics/<slug>.md`・`docs/guide/*.md`・`tasks/index.md` は日付プレフィックス無し（長期的な集約ページのため）。`docs/tables/<slug>.yaml`・`docs/metrics/<slug>.yaml` も日付無し（`slug` は YAML の `name` と同じ）
 - `docs/references/` は規約の対象外。受け取った日を頭に付け（`yyyymmdd_<元のファイル名>`）、元のファイル名は変えなくてよい。frontmatter も不要
 
 例:
@@ -243,7 +247,7 @@ format: slide
 | `deliverable` | `audience: client/internal/...`, `format: slide/report/dashboard` | `source_prompt: path-or-inline` |
 | `exploration` | `prompt: ...`, `outcome: open/promoted/discarded` | `promoted_to: path-to-decision` |
 
-`tasks/index.md`（台帳）も `type: task` です。決定事項（ADR）本文は H2 で `## Context` `## Decision` `## Consequences` `## Alternatives Considered`（型は運用ガイド 4-4。別案がメモに無ければ `## Alternatives Considered` は省く）。
+`tasks/index.md`（台帳）も `type: task` です。`docs/tables/`・`docs/metrics/` の YAML（`type: table`・`type: metric`）は frontmatter を持たない YAML そのもので、このスキーマの外です（`type` の列挙にも lint の `VALID_TYPES` にも入れない。lint の対象外。型は `docs/guide/data-definition-guide.md`）。決定事項（ADR）本文は H2 で `## Context` `## Decision` `## Consequences` `## Alternatives Considered`（型は運用ガイド 4-4。別案がメモに無ければ `## Alternatives Considered` は省く）。
 
 ---
 
@@ -486,6 +490,12 @@ format: slide
    ## Wiki
    - [docs/wiki/index.md] <title> — <summary>
 
+   ## Data（docs/tables/ があるときだけ）
+   - [docs/tables/<slug>.yaml] <title> — <粒度>
+
+   ## Metrics（docs/metrics/ があるときだけ）
+   - [docs/metrics/<slug>.yaml] <title> — <1 行の式>
+
    ## Topics
    - [docs/wiki/topics/xxx.md] <title> — <summary>
 
@@ -502,22 +512,27 @@ format: slide
    - [tasks/index.md] タスク台帳（個別列挙しない）
    ```
 
+### 9. テーブル定義・指標の定義（分析案件だけ）
+
+ユーザーが「テーブル定義を整理したい」「定義書を取り込んで」「指標の定義を整理したい」「この指標の計算方法を残したい」と依頼した場合は、`table-definition`・`metric-definition` skill を使う。skill が無いときは `docs/guide/data-definition-guide.md` を読み、2 章（テーブル）・3 章（指標）の「作る流れ」に従う。置き場が無ければ、同じガイドの 4 章のものを承認後に足す。
+
 ---
 
 ## 推奨 skill 一覧
 
-このリポジトリの運用で使うと便利な skill とトリガーです。skill はいずれも規約駆動で、この AGENTS.md と `docs/guide/project-ops-guide.md` から置き場と型を読んで動きます。
+このリポジトリの運用で使うと便利な skill とトリガーです。skill はいずれも規約駆動で、この AGENTS.md と「型の正本」列のガイドから置き場と型を読んで動きます。
 
-**skill が無くても運用できます。** AI はこの AGENTS.md の推奨ワークフローと運用ガイドの型に従って、議事録・台帳の追記・決定ファイル・wiki 差分を同じ形で作ります。skill を入れると、手順（保存前の確認、承認してから反映するものの区別など）がぶれにくくなります。
+**skill が無くても運用できます。** AI はこの AGENTS.md の推奨ワークフローと「型の正本」列のガイドに従って、議事録・台帳の追記・決定ファイル・wiki 差分・テーブル定義と指標の定義の YAML を同じ形で作ります。skill を入れると、手順（保存前の確認、承認してから反映するものの区別など）がぶれにくくなります。
 
-| 区分 | skill | トリガー例 | 用途 | 出どころ |
-|------|-------|-----------|------|----------|
-| 中心 | `meeting-minutes` | 「議事録化して」「メモを整えて」 | `_drafts/` → 議事録 + 台帳追記 + 決定案 + `llms.txt` + wiki 差分（ワークフロー 1） | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
-| 中心 | `grill-me` | 「壁打ちしたい」「論点を整理したい」「プランを精査して」 | 前提を疑う批判的壁打ち。論点整理 md を残す（ワークフロー 5） | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
-| 中心 | `table-definition` | 「テーブル定義を整理したい」「定義書を取り込んで」 | 分析案件だけ。使うテーブルを 1 論理テーブル 1 YAML（`docs/tables/`）と wiki「データ」表に整理する。置き場は初回実行時に承認後に追加 | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
-| 設計・実装 | `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5。実装が完了したら削除） | [obra/superpowers](https://github.com/obra/superpowers) |
-| 設計・実装 | `writing-plans` | 「実装プランを書いて」 | 設計書から実装計画を作る | [obra/superpowers](https://github.com/obra/superpowers) |
-| 資料作成（任意） | `deck-outline` → `html-slide-deck` → `deck-critique` | 「スライド作って」「説明資料を」「資料をレビューして」 | 構成 md → `.dc.html` → 批評（ワークフロー 6）。デザインは作者のデザインシステムなので、使う場合は自分の型に差し替える | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
+| 区分 | skill | トリガー例 | 用途 | 型の正本 | 出どころ |
+|------|-------|-----------|------|----------|----------|
+| 中心 | `meeting-minutes` | 「議事録化して」「メモを整えて」 | `_drafts/` → 議事録 + 台帳追記 + 決定案 + `llms.txt` + wiki 差分（ワークフロー 1） | `docs/guide/project-ops-guide.md` 4 節 | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
+| 中心 | `grill-me` | 「壁打ちしたい」「論点を整理したい」「プランを精査して」 | 前提を疑う批判的壁打ち。論点整理 md を残す（ワークフロー 5） | — | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
+| 分析 | `table-definition` | 「テーブル定義を整理したい」「定義書を取り込んで」 | 分析案件だけ。使うテーブルを 1 論理テーブル 1 YAML（`docs/tables/`）と wiki「データ」表に整理する。置き場は初回実行時に承認後に追加 | `docs/guide/data-definition-guide.md` 2 章 | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
+| 分析 | `metric-definition` | 「指標の定義を整理したい」「この指標の計算方法を残したい」 | 分析案件だけ。指標の式・分子と分母・母集団・束ね方を 1 指標 1 YAML（`docs/metrics/`）と wiki「用語」表に整理する。置き場は初回実行時に承認後に追加 | `docs/guide/data-definition-guide.md` 3 章 | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
+| 設計・実装 | `brainstorming` | 「設計を固めたい」「方針を考えたい」 | 対話で要件と設計を固め `docs/superpowers/specs/` に設計書（ワークフロー 5。実装が完了したら削除） | — | [obra/superpowers](https://github.com/obra/superpowers) |
+| 設計・実装 | `writing-plans` | 「実装プランを書いて」 | 設計書から実装計画を作る | — | [obra/superpowers](https://github.com/obra/superpowers) |
+| 資料作成（任意） | `deck-outline` → `html-slide-deck` → `deck-critique` | 「スライド作って」「説明資料を」「資料をレビューして」 | 構成 md → `.dc.html` → 批評（ワークフロー 6）。デザインは作者のデザインシステムなので、使う場合は自分の型に差し替える | — | [Kyo1M/skills](https://github.com/Kyo1M/skills) |
 
 Kyo1M/skills の skill は [skills CLI](https://github.com/vercel-labs/skills) で入れられます（入れ先のエージェントは対話で選ぶ）。superpowers は元のリポジトリの導入手順に従ってください。
 
@@ -541,6 +556,7 @@ npx skills add Kyo1M/skills --skill meeting-minutes    # 1 つ選んで入れる
 | 正本 | 転写先 | 同期するとき |
 |------|--------|--------------|
 | `docs/guide/project-ops-guide.md` 3・4・7 節（タスクの持ち方・議事録の構成・ネクストアクション表・台帳・決定の判定・wiki 差分の範囲・保存前の確認・タスクファイルの型） | 本ファイル「推奨ワークフロー」1〜3 の要約／`tasks/index.md` の凡例／`llms.txt`・`README.md` の説明 | 列・ID・状態の値・番号の規則・判定基準を変えたとき |
+| `docs/guide/data-definition-guide.md`（テーブル定義・指標の定義の型・wiki と `llms.txt` の行・初めて使うときに足すもの） | 本ファイル「ディレクトリの選び方」・命名規約・frontmatter スキーマの要約（テンプレート本体を直すときだけ、[Kyo1M/skills](https://github.com/Kyo1M/skills) の `table-definition/references/table-schema.md`・`metric-definition/references/metric-schema.md` にも写す） | 項目・値の選択肢・書かないもの・一覧の列を変えたとき |
 | 本ファイル「frontmatter スキーマ」 | `scripts/lint-frontmatter.ts` の `VALID_TYPES`・`VALID_STATUSES`・`REQUIRED_FIELDS` | type・status・必須フィールドを変えたとき |
 | 本ファイル「ディレクトリ構造」 | `README.md` の早見表／`docs/wiki/index.md`「歩き方」 | ディレクトリを増減したとき |
 
