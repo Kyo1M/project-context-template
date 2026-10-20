@@ -12,7 +12,7 @@ summary: 分析で使うテーブル定義（docs/tables/）と指標の定義�
 
 分析案件で使うテーブルの定義と指標の定義を、YAML でリポジトリに残すときの **型の正本** です。テーブル定義は `docs/tables/<slug>.yaml`、指標の定義は `docs/metrics/<slug>.yaml` に置きます。分析をしない案件は読まなくて構いません。
 
-`table-definition` skill と `metric-definition` skill（[Kyo1M/skills](https://github.com/Kyo1M/skills)）はこのガイドの型を読んで動きます。skill が無い環境でも、AI はこのガイドの型と各章の「作る流れ」に従って同じ YAML を作ります。型を変えるときは、このガイドを先に直してから `AGENTS.md` の要約と skill の既定の型（`table-definition/references/table-schema.md`・`metric-definition/references/metric-schema.md`）に写します。
+`table-definition` skill と `metric-definition` skill（[Kyo1M/skills](https://github.com/Kyo1M/skills)）はこのガイドの型を読んで動きます。skill が無い環境でも、AI はこのガイドの型と各章の「作る流れ」に従って同じ YAML を作ります。案件で型を変えるときは、このガイドを先に直してから `AGENTS.md` の要約に写します。skill の既定の型（`table-definition/references/table-schema.md`・`metric-definition/references/metric-schema.md`）への写しは、テンプレート本体（[Kyo1M/project-context-template](https://github.com/Kyo1M/project-context-template)）を直すときだけ行います。
 
 | 知りたいこと | 読む章 |
 |---|---|
@@ -128,7 +128,7 @@ notes:                         # テーブル全体の注意点・集計時の�
 | [受注明細](../tables/order-detail.yaml) | 1 注文 × 1 商品 | order_id, line_no（結合: customer_id, item_id） | 返品は負の値。円換算の方向は要確認 |
 ```
 
-`llms.txt` の「Data」節には `- [受注明細](./docs/tables/order-detail.yaml): 1 注文 × 1 商品` の形で 1 行足します。wiki に「直近更新」節があれば、その 1 行も差分に含めます。
+`llms.txt` の「Data」節には `- [docs/tables/order-detail.yaml](./docs/tables/order-detail.yaml): 受注明細（1 注文 × 1 商品）` の形で 1 行足します（ほかの節と同じく、リンクの文字はパス）。wiki に「直近更新」節があれば、その 1 行も差分に含めます。
 
 ### 2-5. 作る流れ
 
@@ -186,12 +186,15 @@ notes:
 
 | 項目 | 何を書くか |
 |---|---|
+| `aliases`・`category` | 任意。資料・クライアント・SQL の列名での呼び名と、案件の KPI の分け方にそろえた分類 |
 | `status` | AI が案を出した時点は `draft`。`checks` の突き合わせが済み、人が確かめたら `active`。突き合わせ先が無い指標は `checks` に `against: なし（理由）` と書き、人が定義を確かめたら `active` にしてよい。突き合わせで合わないときは理由が分かるまで `draft` のまま |
 | `derived_from` | もとにした定義書（ファイル名とシート名）・参考にした SQL のパス・「貼り付けの SQL（要旨）」・「口頭」。複数あれば列挙する。正とした取り方の SQL があれば、そのパスを先頭に書く |
 | `definition` | 1 行の式か数え方。あわせて、期間に入れる日付の列（受注日か出荷日か）、基準日（いつ時点の値か、起点の日）、通貨、税込か税抜か、返品の扱いのように、取り方で値が変わる決めごとを書く。SQL のコメントにしか無い決めごとも、ここか `notes` に移す |
 | `numerator`・`denominator`・`scale` | 率の指標だけ。分子・分母はそれぞれ何をどの条件で数えるか（ユニーク数か件数か）まで書く |
 | `unit` | 3-1 の値から選ぶ。通貨の種類は `definition` に書く |
 | `grain`・`keys`・`time_key` | 指標の値が決まる単位と、それを表す集計の出力の列名。会員ごとの値なら「会員×年」、率なら「月」「店舗×月」のように、値が 1 つに決まる単位にする |
+| `window` | 任意。直近 12 か月のように、値を決める期間の窓がある指標だけ |
+| `polarity` | 高いほど良い（`higher_is_better`）・低いほど良い（`lower_is_better`）・どちらでもない（`neutral`） |
 | `population` | 対象に含める条件と除く条件。wiki の「用語」表に定義がある条件（社員アカウントの除外など）は、その用語を名指しして参照する。用語が無ければ条件をここに直接書く |
 | `tables` | 使うテーブルの `docs/tables/` の slug（2 章）。定義が無いテーブルは配列に入れず、`notes` に「<物理名> のテーブル定義が無い（要確認）」と書き、先にテーブル定義を作ることを勧める |
 | `basis` | 3-3 の 6 つから 1 つ。中央値なども並べて出すときは `notes` に書く |
@@ -225,7 +228,7 @@ notes:
 | [購入転換率](../metrics/purchase-conversion-rate.yaml) | 購入者数 ÷ 訪問者数 × 100（束ね方: 分子・分母を数え直してから割る） |
 ```
 
-`llms.txt` の「Metrics」節には `- [購入転換率](./docs/metrics/purchase-conversion-rate.yaml): 購入者数 ÷ 訪問者数 × 100` の形で 1 行足します。wiki に「直近更新」節があれば、その 1 行も差分に含めます。
+`llms.txt` の「Metrics」節には `- [docs/metrics/purchase-conversion-rate.yaml](./docs/metrics/purchase-conversion-rate.yaml): 購入転換率（購入者数 ÷ 訪問者数 × 100）` の形で 1 行足します。wiki に「直近更新」節があれば、その 1 行も差分に含めます。
 
 ### 3-5. 記載例 2（区分を持つ指標）
 

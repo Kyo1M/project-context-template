@@ -556,7 +556,7 @@ npx skills add Kyo1M/skills --skill meeting-minutes    # 1 つ選んで入れる
 | 正本 | 転写先 | 同期するとき |
 |------|--------|--------------|
 | `docs/guide/project-ops-guide.md` 3・4・7 節（タスクの持ち方・議事録の構成・ネクストアクション表・台帳・決定の判定・wiki 差分の範囲・保存前の確認・タスクファイルの型） | 本ファイル「推奨ワークフロー」1〜3 の要約／`tasks/index.md` の凡例／`llms.txt`・`README.md` の説明 | 列・ID・状態の値・番号の規則・判定基準を変えたとき |
-| `docs/guide/data-definition-guide.md`（テーブル定義・指標の定義の型・wiki と `llms.txt` の行・初めて使うときに足すもの） | 本ファイル「ディレクトリの選び方」・命名規約・frontmatter スキーマの要約／[Kyo1M/skills](https://github.com/Kyo1M/skills) の `table-definition/references/table-schema.md`・`metric-definition/references/metric-schema.md`（skill の既定の型） | 項目・値の選択肢・書かないもの・一覧の列を変えたとき |
+| `docs/guide/data-definition-guide.md`（テーブル定義・指標の定義の型・wiki と `llms.txt` の行・初めて使うときに足すもの） | 本ファイル「ディレクトリの選び方」・命名規約・frontmatter スキーマの要約（テンプレート本体を直すときだけ、[Kyo1M/skills](https://github.com/Kyo1M/skills) の `table-definition/references/table-schema.md`・`metric-definition/references/metric-schema.md` にも写す） | 項目・値の選択肢・書かないもの・一覧の列を変えたとき |
 | 本ファイル「frontmatter スキーマ」 | `scripts/lint-frontmatter.ts` の `VALID_TYPES`・`VALID_STATUSES`・`REQUIRED_FIELDS` | type・status・必須フィールドを変えたとき |
 | 本ファイル「ディレクトリ構造」 | `README.md` の早見表／`docs/wiki/index.md`「歩き方」 | ディレクトリを増減したとき |
 
