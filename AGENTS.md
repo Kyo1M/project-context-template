@@ -560,6 +560,8 @@ npx skills add Kyo1M/skills --skill meeting-minutes    # 1 つ選んで入れる
 | 本ファイル「frontmatter スキーマ」 | `scripts/lint-frontmatter.ts` の `VALID_TYPES`・`VALID_STATUSES`・`REQUIRED_FIELDS` | type・status・必須フィールドを変えたとき |
 | 本ファイル「ディレクトリ構造」 | `README.md` の早見表／`docs/wiki/index.md`「歩き方」 | ディレクトリを増減したとき |
 
+この AGENTS.md・ガイドと既存のファイル・コードが食い違うときは、既存の書き方に従います。ただし、ドキュメントのほうが新しい決定（日付付きの改訂・決定ファイル）と読めるときは、既存に合わせて書き換えず確認します。見つけた食い違いは、最後の返答ですべて挙げます。
+
 ---
 
 ## プロジェクト固有の指示
